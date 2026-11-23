@@ -44,6 +44,7 @@ KOPIS 공연목록 ──┼─▶ engine/ (체감온도·위험 단계 계산) 
 - 각자 작업 브랜치: `engine`, `web`, `docs`
 - 작업 → commit → 자기 브랜치에 push → GitHub 에서 Pull Request → 한 명 이상 확인 후 merge
 - 커밋 메시지: `타입(영역): 내용 (#이슈번호)` 예) `feat(engine): 체감온도 계산 추가 (#2)`
+- 작업 시작 전 항상 'git pull origin main'으로 main 최신 내용을 내 브랜치에 받는다.
 
 ## 실행 방법
 
