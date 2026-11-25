@@ -3,6 +3,7 @@
 //   #/show/<id>     공연 화면
 //   #/replay        2025 사례 목록 (replay_2025.json)
 //   #/replay/<id>   2025 사례 공연 화면
+//   …/<id>/org      같은 공연의 공단·주최사용 화면 (단계별 대응 가이드)
 // 티켓을 누르면 View Transitions API 로 티켓이 공연 화면 맨 위 큰 티켓으로 커진다.
 // (지원하지 않는 브라우저는 그냥 화면만 바뀜)
 import "./style.css";
@@ -18,7 +19,8 @@ function parse() {
   const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
   const mode = parts[0] === "replay" ? "replay" : "forecast";
   const id = parts[0] === "replay" || parts[0] === "show" ? parts[1] : null;
-  return { mode, id: id ? decodeURIComponent(id) : null };
+  const view = parts[2] === "org" ? "org" : "fan";
+  return { mode, id: id ? decodeURIComponent(id) : null, view };
 }
 
 // 머리·꼬리 글자 (언어 바뀔 때마다)
@@ -35,9 +37,9 @@ function renderChrome(mode) {
 }
 
 async function render() {
-  const { mode, id } = parse();
+  const { mode, id, view } = parse();
   renderChrome(mode);
-  if (id) await renderDetail(app, mode, id);
+  if (id) await renderDetail(app, mode, id, view);
   else await renderList(app, mode);
 }
 

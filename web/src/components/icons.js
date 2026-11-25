@@ -15,6 +15,10 @@ export const icon = {
   cup: (s) => wrap(`<path d="M6 8h12l-1.5 12h-9L6 8ZM5 5h14M9 2.5 10 5"/>`, s),
   share: (s) => wrap(`<path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/>`, s),
   shelter: (s) => wrap(`<path d="M3 11 12 4l9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/>`, s),
+  umbrella: (s) => wrap(`<path d="M3 12a9 9 0 0 1 18 0Z"/><path d="M12 12v7a2 2 0 0 1-4 0"/><path d="M12 3v0"/>`, s),
+  wind: (s) => wrap(`<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h16a3 3 0 1 1-3 3"/><path d="M3 16h7"/>`, s),
+  medical: (s) => wrap(`<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="M12 8v8M8 12h8"/>`, s),
+  megaphone: (s) => wrap(`<path d="M4 10v4a1 1 0 0 0 1 1h2l7 4V5L7 9H5a1 1 0 0 0-1 1Z"/><path d="M17.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M7 15l1.5 5"/>`, s),
   check: (s) => wrap(`<path d="m5 12.5 4.5 4.5L19 7.5"/>`, s),
   ticket: (s) => wrap(`<path d="M3 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4v1.5A1.5 1.5 0 0 0 4.5 19h15a1.5 1.5 0 0 0 1.5-1.5V16a2 2 0 0 1 0-4 2 2 0 0 0 0-4V6.5A1.5 1.5 0 0 0 19.5 5h-15A1.5 1.5 0 0 0 3 6.5Z"/><path d="M15 5v14" stroke-dasharray="2 2.5"/>`, s),
 };

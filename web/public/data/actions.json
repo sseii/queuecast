@@ -11,7 +11,39 @@
       "audience": {
         "ko": "공연 당일 대기 시간대 체감온도가 {peak_feel}℃까지 오를 것으로 예상됩니다. {recommended_arrival} 이후 도착을 권장하며, 물·양산·모자를 꼭 챙겨 주세요.",
         "en": "The feels-like temperature is expected to reach {peak_feel}°C while you wait. We recommend arriving after {recommended_arrival}. Please bring water, a parasol and a hat."
-      }
+      },
+      "org_detail": [
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "대기 구역·MD 판매 줄을 따라 그늘막 설치, 그늘이 끊기는 구간이 없게 배치"
+        },
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "급수대·생수 배부처 설치, 줄 중간에서도 닿는 위치에 둘 것"
+        },
+        {
+          "cat": "indoor",
+          "when": "peak",
+          "text": "가장 더운 시간에 쉬어 갈 수 있는 실내 공간(로비 등) 1곳 확보, 위치 안내"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "의무실 위치 안내, 온열질환 응급 키트(얼음팩·이온음료·체온계) 비치"
+        },
+        {
+          "cat": "queue",
+          "when": "wait",
+          "text": "MD 판매 줄을 번호표·30분 단위 순환으로 운영해 한 번에 서 있는 시간 단축"
+        },
+        {
+          "cat": "notice",
+          "when": "wait",
+          "text": "현장 방송·전광판으로 폭염 주의, 물 마시기 안내"
+        }
+      ]
     },
     "warning": {
       "org": [
@@ -24,7 +56,39 @@
       "audience": {
         "ko": "대기 시간대 체감온도가 {peak_feel}℃로 폭염경보 수준입니다. 오후에 미리 와서 줄 서지 마시고 {recommended_arrival} 이후 도착해 주세요. 어지럽거나 두통이 있으면 즉시 그늘로 이동해 가까운 스태프에게 알려 주세요.",
         "en": "The feels-like temperature will reach {peak_feel}°C, a heat-warning level. Please avoid queuing outdoors in the afternoon and arrive after {recommended_arrival}. If you feel dizzy or have a headache, move to the shade and tell a staff member right away."
-      }
+      },
+      "org_detail": [
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "주의 단계 그늘막·급수 전부 설치하고, 그늘 없는 구간에 쿨링포그·대형 선풍기 추가 검토"
+        },
+        {
+          "cat": "indoor",
+          "when": "before_wait",
+          "text": "실내 대기 공간 개방(인근 경기장·로비), 줄 순서는 번호표로 유지"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "의료 인력을 대기 구역에 상시 배치"
+        },
+        {
+          "cat": "medical",
+          "when": "peak",
+          "text": "가장 더운 시간 앞뒤로 30분 간격 순찰, 어지럼·두통 관객 확인"
+        },
+        {
+          "cat": "queue",
+          "when": "now",
+          "text": "입장 시작 시각 앞당기기 또는 MD 판매 시간 분산을 주최사와 협의"
+        },
+        {
+          "cat": "notice",
+          "when": "now",
+          "text": "예매처 협조로 '오후 야외 줄서기 자제' 안내 문자 발송"
+        }
+      ]
     },
     "danger": {
       "org": [
@@ -37,7 +101,49 @@
       "audience": {
         "ko": "대기 시간대 체감온도가 {peak_feel}℃로 매우 위험한 수준입니다. 야외에서 기다리지 마시고 입장 시간에 맞춰 도착해 주세요. 공연장 안내에 따라 실내에서 대기해 주세요.",
         "en": "The feels-like temperature will reach {peak_feel}°C, a dangerous level. Please do not wait outdoors and arrive just in time for entry. Follow staff guidance to wait indoors."
-      }
+      },
+      "org_detail": [
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "경고 단계 그늘·급수·냉방 설비 전부 가동"
+        },
+        {
+          "cat": "indoor",
+          "when": "before_wait",
+          "text": "야외 대기 줄 운영 중단, 실내 대기로 전환"
+        },
+        {
+          "cat": "indoor",
+          "when": "now",
+          "text": "실내 수용이 모자라면 입장 시간대를 나눠 관객별 도착 시간 안내"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "구급차 현장 대기 요청, 119 연계 체계 점검"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "의료 인력 대기 구역 상시 배치, 순찰 강화"
+        },
+        {
+          "cat": "queue",
+          "when": "now",
+          "text": "MD 현장 판매 중단·사전 예약 수령 전환 등 야외 대기 원인 제거를 주최사와 협의"
+        },
+        {
+          "cat": "notice",
+          "when": "now",
+          "text": "관객 전원에게 폭염 위험 안내 문자 발송"
+        },
+        {
+          "cat": "notice",
+          "when": "wait",
+          "text": "현장 방송으로 실내 대기 위치 30분 간격 안내"
+        }
+      ]
     }
   },
   "winter": {
@@ -52,7 +158,34 @@
       "audience": {
         "ko": "대기 시간대 체감온도가 {peak_feel}℃까지 내려갈 것으로 예상됩니다. {recommended_arrival} 이후 도착을 권장하며, 장갑·목도리·핫팩을 챙겨 주세요. 공연이 끝난 뒤에도 추우니 따뜻한 겉옷을 준비해 주세요.",
         "en": "The feels-like temperature is expected to drop to {peak_feel}°C while you wait. We recommend arriving after {recommended_arrival}. Please bring gloves, a scarf and hand warmers, and keep a warm coat for after the show."
-      }
+      },
+      "org_detail": [
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "대기 구역 바람막이 설치, 핫팩·따뜻한 음료 배부 검토"
+        },
+        {
+          "cat": "indoor",
+          "when": "peak",
+          "text": "로비 등 실내 대기 공간 일부 개방, 몸 녹일 곳 안내"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "의무실 위치 안내, 담요·저체온 응급 물품 비치"
+        },
+        {
+          "cat": "queue",
+          "when": "wait",
+          "text": "MD 판매 줄을 번호표·순환 방식으로 운영해 연속 대기 시간 단축"
+        },
+        {
+          "cat": "notice",
+          "when": "after_show",
+          "text": "공연 종료 후 퇴장·픽업 대기 동선 안내 (주차 {parking_full_eta} 만차 예상 시 대중교통 안내)"
+        }
+      ]
     },
     "warning": {
       "org": [
@@ -65,7 +198,39 @@
       "audience": {
         "ko": "대기 시간대 체감온도가 {peak_feel}℃로 매우 춥습니다. 야외에서 오래 기다리지 마시고 입장 시간에 맞춰 도착해 주세요. 손발이 저리거나 몸이 떨리면 즉시 실내로 이동해 주세요.",
         "en": "The feels-like temperature will drop to {peak_feel}°C, which is very cold. Please do not wait outdoors for long and arrive in time for entry. If your hands or feet feel numb or you start shivering, go indoors right away."
-      }
+      },
+      "org_detail": [
+        {
+          "cat": "shade",
+          "when": "before_wait",
+          "text": "바람막이 구역 확대, 핫팩·따뜻한 음료 배부"
+        },
+        {
+          "cat": "indoor",
+          "when": "before_wait",
+          "text": "야외 대기 줄 운영 최소화, 실내 대기로 전환"
+        },
+        {
+          "cat": "medical",
+          "when": "wait",
+          "text": "의료 인력 대기 구역 상시 배치"
+        },
+        {
+          "cat": "medical",
+          "when": "peak",
+          "text": "가장 추운 시간 앞뒤로 순찰, 손발 저림·떨림 관객 확인"
+        },
+        {
+          "cat": "queue",
+          "when": "now",
+          "text": "입장 시작 시각 앞당기기를 주최사와 협의"
+        },
+        {
+          "cat": "notice",
+          "when": "now",
+          "text": "관객 전원에게 한파 위험 안내 문자 발송"
+        }
+      ]
     }
   },
   "scale": {
@@ -82,7 +247,6 @@
       "min_audience": 10000,
       "label": "1만 명 이상",
       "org": [
-        "5천 명 이상 조치 전부 시행",
         "대기 구역을 구역별로 나눠 운영하고 구역마다 안내 인력·무전 체계 배치",
         "의료 인력·구급 거점을 대기 구역 2곳 이상에 나눠 배치",
         "입장 게이트 추가 개방 또는 좌석 구역별 입장 시간 분산",

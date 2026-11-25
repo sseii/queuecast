@@ -4,12 +4,12 @@ import { t } from "../i18n.js";
 import { art } from "./art.js";
 import { photosFor, photoImg } from "../photos.js";
 
-export function showCard(show, mode, { mini = false } = {}) {
+export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
   const level = show.risk?.level ?? "safe";
   const theme = themeOf(show);
   const d = dateParts(show.date);
   const dd = mode === "replay" ? null : dday(show);
-  const href = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(show.id)}`;
+  const href = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(show.id)}${view === "org" ? "/org" : ""}`;
   const hint = level === "safe" ? t("ticket.hint.safe") : t("ticket.hint", { t: esc(show.recommended_arrival ?? "-") });
   const people = fmtPeople(show.expected_audience);
   const [photo] = photosFor(theme, show.id, 1);

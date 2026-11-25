@@ -354,3 +354,54 @@ a.fac-tile:hover { background: var(--accent-soft); }
   .lang-toggle { padding: 6px 10px; font-size: 0.78rem; }
   .logo strong { display: none; }
 }
+
+/* ── 관객용 / 공단·주최사용 전환 ── */
+.view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--paper); padding: 5px; border-radius: 18px; margin-bottom: 14px; }
+.view-switch a { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font-weight: 800; font-size: 0.95rem; color: var(--sub); padding: 11px; border-radius: 14px; }
+.view-switch a.active { background: var(--ink); color: #fff; }
+
+/* 대응 가이드로 가는 입구 (관객용 화면 맨 아래) */
+.guide-cta { display: flex; align-items: center; gap: 14px; text-decoration: none; background: var(--ink); color: #fff; border-radius: 22px; padding: 18px 22px; margin-bottom: 14px; }
+.guide-cta b { display: block; font-size: 1rem; }
+.guide-cta small { color: #cfcbe6; font-size: 0.84rem; }
+.guide-cta .cat-ico { background: rgb(255 255 255 / 0.14); color: #fff; }
+.guide-cta .arrow { margin-left: auto; font-size: 1.8rem; line-height: 1; }
+
+/* ── 단계별 대응 가이드 ── */
+.ladder { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; margin-bottom: 18px; }
+.rung { position: relative; border: 0; cursor: pointer; font: inherit; padding: 14px 8px 12px; border-radius: 16px; background: var(--tile); color: var(--sub);
+  display: flex; flex-direction: column; align-items: center; gap: 4px; border-top: 5px solid transparent; }
+.rung-name { font-weight: 800; font-size: 1rem; }
+.rung-today { font-size: 0.72rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; background: var(--ink); color: #fff; }
+.lv-rung-safe { border-top-color: var(--safe); }
+.lv-rung-caution { border-top-color: var(--caution); }
+.lv-rung-warning { border-top-color: var(--warning); }
+.lv-rung-danger { border-top-color: var(--danger); }
+.rung[aria-selected="true"] { color: #fff; }
+.rung.lv-rung-safe[aria-selected="true"] { background: var(--safe); }
+.rung.lv-rung-caution[aria-selected="true"] { background: var(--caution); color: var(--ink); }
+.rung.lv-rung-warning[aria-selected="true"] { background: var(--warning); }
+.rung.lv-rung-danger[aria-selected="true"] { background: var(--danger); }
+.rung[aria-selected="true"] .rung-today { background: #fff; color: var(--ink); }
+
+.guide-status { font-size: 1.02rem; font-weight: 700; }
+.guide-sum { color: var(--sub); font-size: 0.86rem; margin: 2px 0 12px; }
+.guide-safe { font-size: 1.1rem; font-weight: 800; color: var(--safe); padding: 10px 0; }
+.guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 10px; margin-bottom: 12px; }
+.guide-cat { background: var(--tile); border-radius: 18px; padding: 14px 16px 8px; }
+.guide-cat h3 { display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+.cat-ico { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--paper); color: var(--accent); flex: none; }
+.guide-cat ul { list-style: none; padding: 0; margin: 0; }
+.guide-cat li { border-top: 1px solid var(--paper); }
+.guide-cat li:first-child { border-top: 0; }
+.guide-cat label { display: grid; grid-template-columns: 20px 1fr; gap: 4px 10px; padding: 10px 0; cursor: pointer; }
+.guide-cat input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
+.g-text { font-size: 0.93rem; line-height: 1.5; }
+.g-when { grid-column: 2; justify-self: start; font-size: 0.76rem; font-weight: 800; color: var(--accent); background: var(--paper); padding: 2px 9px; border-radius: 999px; }
+.guide-cat input:checked ~ .g-text { color: var(--faint); text-decoration: line-through; }
+.guide .scale { margin-bottom: 10px; }
+@media (max-width: 640px) {
+  .rung { padding: 12px 4px 10px; }
+  .rung-name { font-size: 0.9rem; }
+  .rung-today { font-size: 0.64rem; padding: 1px 5px; }
+}

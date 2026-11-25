@@ -1,6 +1,6 @@
 // 관객 안내(한·영)와 공단·주최사 대응 체크리스트 (#8)
 //  - 관객 안내: actions.json [계절][단계].audience + 가장 가까운 실내 쉼터
-//  - 대응 체크리스트: actions.json [계절][단계].org + 관객 규모 추가 조치(actions.json scale)
+//  - 공단·주최사 대응은 orgGuide.js
 import { esc, fillTemplate, fmtPeople } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { nearest, fmtDist, mapUrl } from "./facilities.js";
@@ -52,50 +52,18 @@ function shelterBox(f, show, l) {
     : `<div class="shelter">${inner}</div>`;
 }
 
-// 관객 규모 구간: actions.json 의 scale 중 min 이하인 것 가운데 가장 큰 구간
+// 관객 규모 추가 조치: actions.json scale 중 예상 관객 수가 넘는 구간을 작은 구간부터 모두
+//  (1만 명이면 5천 명 이상 조치 + 1만 명 이상 조치)
 export function scaleTier(actions, show) {
   const n = show.expected_audience;
   if (n == null || !actions?.scale) return null;
-  return Object.values(actions.scale)
+  const tiers = Object.values(actions.scale)
     .filter((s) => n >= s.min_audience)
-    .sort((a, b) => b.min_audience - a.min_audience)[0] ?? null;
+    .sort((a, b) => a.min_audience - b.min_audience);
+  if (!tiers.length) return null;
+  return { label: tiers[tiers.length - 1].label, org: tiers.flatMap((s) => s.org) };
 }
 
-export function orgCard(actions, show) {
-  const level = show.risk?.level ?? "safe";
-  const e = entry(actions, show);
-  const tier = level === "safe" ? null : scaleTier(actions, show);
-  const base = level === "safe" || !e ? [] : e.org;
-
-  if (!base.length) {
-    return `
-    <section class="block org">
-      <h2>${t("org.title")}</h2>
-      <p class="fine">${t("org.none")}</p>
-    </section>`;
-  }
-  const list = (items, prefix) =>
-    items
-      .map((txt, i) => `<li><input type="checkbox" id="${prefix}-${i}" /><label for="${prefix}-${i}">${fillTemplate(txt, show, "ko")}</label></li>`)
-      .join("");
-
-  return `
-  <details class="block org" open>
-    <summary><h2>${t("org.title")}</h2><span class="org-count">${t("org.count", { n: base.length + (tier?.org.length ?? 0) })}</span></summary>
-    ${lang() === "en" ? `<p class="fine">${t("org.ko")}</p>` : ""}
-    <ul class="checklist">${list(base, "org")}</ul>
-    ${
-      tier
-        ? `<div class="scale">
-            <h3>${t("org.scale")}</h3>
-            <p class="fine">${t("org.scale.sub", { n: fmtPeople(show.expected_audience), s: esc(tier.label) })}</p>
-            <ul class="checklist">${list(tier.org, "scale")}</ul>
-          </div>`
-        : ""
-    }
-    <p class="fine">${t("org.note")}</p>
-  </details>`;
-}
 
 // 언어 탭·복사 버튼 동작 연결
 export function bindAudience(root) {

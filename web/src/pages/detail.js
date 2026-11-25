@@ -4,20 +4,22 @@
 //  ⑧ 공단·주최사 체크리스트(관객 규모 추가 조치)  ⑨ 다른 공연
 import { loadShows, loadActions } from "../data.js";
 import { hourlyStrip } from "../components/hourlyStrip.js";
-import { audienceCard, orgCard, bindAudience } from "../components/actionCard.js";
+import { audienceCard, bindAudience } from "../components/actionCard.js";
+import { orgGuide, bindGuide } from "../components/orgGuide.js";
 import { facilitiesCard } from "../components/facilities.js";
 import { showCard } from "../components/showCard.js";
 import { art } from "../components/art.js";
 import { icon } from "../components/icons.js";
-import { countdown, startCountdown, timeline, packList, bindPack, shareButton, bindShare } from "../components/dayPlan.js";
+import { countdown, startCountdown, stopCountdown, timeline, packList, bindPack, shareButton, bindShare } from "../components/dayPlan.js";
 import { photosFor, photoImg } from "../photos.js";
 import { esc, dateParts, mood, round, fmtGenerated, fmtPeople, levelName, venueName, themeOf, vtName } from "../util.js";
 import { t, lang } from "../i18n.js";
 
-export async function renderDetail(app, mode, id) {
+export async function renderDetail(app, mode, id, view = "fan") {
   const [data, actions] = await Promise.all([loadShows(mode), loadActions()]);
   const show = data?.shows?.find((s) => s.id === id);
   const back = mode === "replay" ? "#/replay" : "#/";
+  const base = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(id)}`;
 
   if (!show) {
     document.body.dataset.theme = "";
@@ -66,18 +68,53 @@ export async function renderDetail(app, mode, id) {
       </div>
     </section>
 
+    <nav class="view-switch" aria-label="화면">
+      <a href="${base}" class="${view === "fan" ? "active" : ""}">${icon.queue(18)}${t("view.fan")}</a>
+      <a href="${base}/org" class="${view === "org" ? "active" : ""}">${icon.medical(18)}${t("view.org")}</a>
+    </nav>
+
     ${
-      show.foreign_audience && lang() === "ko"
+      view === "fan" && show.foreign_audience && lang() === "ko"
         ? `<button type="button" class="lang-hint" data-set-lang="en">${icon.spark(16)} This show has many international fans. View in English</button>`
         : ""
     }
 
     <div class="unfold">
+      ${view === "org" ? orgView(actions, show) : fanView(actions, show, mode, base)}
+
+      ${
+        others.length
+          ? `<section class="others">
+              <h2>${t("others")}</h2>
+              <div class="others-row">${others.map((s) => showCard(s, mode, { mini: true, view })).join("")}</div>
+            </section>`
+          : ""
+      }
+
+      <p class="fine updated-foot">${t("foot", { t: fmtGenerated(data.generated_at), m: t(`foot.${mode}`) })}</p>
+    </div>
+  `;
+
+  if (view === "org") {
+    stopCountdown();
+    bindGuide(app, actions, show);
+  } else {
+    bindAudience(app);
+    bindPack(app);
+    bindShare(app, show);
+    startCountdown(app);
+  }
+  document.title = `${show.title} | ${lang() === "en" ? "QueueCast" : "큐캐스트"}`;
+}
+
+// 관객용: 카운트다운·타임라인·가방·체감온도·안내·편의시설 + 대응 가이드로 가는 입구
+function fanView(actions, show, mode, base) {
+  const theme = themeOf(show);
+  return `
       <section class="excite">
         ${countdown(show, mode)}
         ${shareButton()}
       </section>
-
       <div class="plan-grid">
         <section class="block">
           <h2>${t("plan.title")}</h2>
@@ -89,32 +126,26 @@ export async function renderDetail(app, mode, id) {
           <p class="fine">${t(`greet.${theme}`)}</p>
         </section>
       </div>
-
       <section class="block">
         <div class="block-head"><h2>${t("strip.title")}</h2></div>
         ${hourlyStrip(show)}
       </section>
-
       ${audienceCard(actions, show)}
       ${facilitiesCard(show)}
-      ${orgCard(actions, show)}
+      <a class="guide-cta" href="${base}/org">
+        <span class="cat-ico">${icon.medical(22)}</span>
+        <span><b>${t("guide.cta")}</b><small>${t("guide.cta.sub")}</small></span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>`;
+}
 
-      ${
-        others.length
-          ? `<section class="others">
-              <h2>${t("others")}</h2>
-              <div class="others-row">${others.map((s) => showCard(s, mode, { mini: true })).join("")}</div>
-            </section>`
-          : ""
-      }
-
-      <p class="fine updated-foot">${t("foot", { t: fmtGenerated(data.generated_at), m: t(`foot.${mode}`) })}</p>
-    </div>
-  `;
-
-  bindAudience(app);
-  bindPack(app);
-  bindShare(app, show);
-  startCountdown(app);
-  document.title = `${show.title} | ${lang() === "en" ? "QueueCast" : "큐캐스트"}`;
+// 공단·주최사용: 시간별 위험 → 단계별 대응 가이드 → 편의시설 위치
+function orgView(actions, show) {
+  return `
+      <section class="block">
+        <div class="block-head"><h2>${t("strip.title")}</h2></div>
+        ${hourlyStrip(show)}
+      </section>
+      ${orgGuide(actions, show)}
+      ${facilitiesCard(show)}`;
 }
