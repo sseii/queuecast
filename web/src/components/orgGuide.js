@@ -3,7 +3,7 @@
 //  - 분야별 조치: 그늘·급수(겨울은 바람막이·보온) / 실내 대기 공간 / 의료 인력 / 입장·줄 운영 / 관객 안내
 //  - 조치마다 언제 할지: 공연 데이터(대기 시작·가장 위험한 시간·공연 시작)로 실제 시각을 계산
 //  문구: actions.json [계절][단계].org_detail (없으면 .org 목록을 그대로 보여줌)
-import { esc, fillTemplate, fmtPeople, levelName, levelOf, LEVELS, showKey } from "../util.js";
+import { esc, fillTemplate, scaleOf, levelName, levelOf, LEVELS, showKey } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { icon } from "./icons.js";
 import { scaleTier } from "./actionCard.js";
@@ -104,7 +104,7 @@ export function orgGuide(actions, show) {
   <section class="block guide" data-guide>
     <div class="block-head">
       <h2>${t("guide.title")}</h2>
-      ${show.expected_audience != null ? `<span class="peak-note">${t("hero.people", { n: fmtPeople(show.expected_audience) })}</span>` : ""}
+      ${scaleOf(show) ? `<span class="peak-note">${t(`scale.${scaleOf(show)}`)}</span>` : ""}
     </div>
     <div class="ladder" role="tablist" aria-label="${t("guide.ladder")}">
       ${levels
@@ -122,7 +122,7 @@ export function orgGuide(actions, show) {
       tier && !["safe", "pending"].includes(today)
         ? `<div class="scale">
             <h3>${t("org.scale")}</h3>
-            <p class="fine">${t("org.scale.sub", { n: fmtPeople(show.expected_audience), s: esc(tier.label) })}</p>
+            <p class="fine">${t("org.scale.sub", { s: t(`scale.${scaleOf(show)}`), n: t(`scale.${scaleOf(show)}.sub`) })}</p>
             <ul class="checklist">${tier.org
               .map((txt, i) => `<li><input type="checkbox" id="scale-${i}" /><label for="scale-${i}">${fillTemplate(txt, show, "ko")}</label></li>`)
               .join("")}</ul>

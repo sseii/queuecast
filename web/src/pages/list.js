@@ -1,7 +1,8 @@
 // 공연 목록 화면 (#7) — 티켓을 누르면 그 공연 화면이 펼쳐진다
 import { loadShows } from "../data.js";
 import { showCard } from "../components/showCard.js";
-import { LEVELS, esc, fmtGenerated, levelName, levelOf } from "../util.js";
+import { LEVELS, fmtGenerated, fmtBase, levelName, levelOf } from "../util.js";
+import { icon } from "../components/icons.js";
 import { t } from "../i18n.js";
 import { stopCountdown } from "../components/dayPlan.js";
 
@@ -9,7 +10,6 @@ export async function renderList(app, mode) {
   document.body.dataset.theme = "";
   stopCountdown();
   const data = await loadShows(mode);
-  setSources(data);
   if (!data) {
     app.innerHTML = `
       <div class="empty">
@@ -31,7 +31,7 @@ export async function renderList(app, mode) {
       <h1>${t(`list.title.${mode}`)}</h1>
       <p>${t(`list.sub.${mode}`)}</p>
       <div class="intro-meta">
-        <span class="updated">${data.generated_at ? `${t("list.updated", { t: fmtGenerated(data.generated_at) })} · ` : ""}${t("list.photos")}</span>
+        ${updatedLine(data)}
         ${counts.map((c) => `<span class="count-pill"><i class="dot lv-dot-${c.lv}"></i>${levelName(c.lv)} ${c.n}</span>`).join("")}
       </div>
     </section>
@@ -62,8 +62,12 @@ export async function renderList(app, mode) {
   `;
 }
 
-function setSources(data) {
-  document.getElementById("sources").textContent = data
-    ? [data.weather_source, data.show_source].filter(Boolean).map(esc).join(", ")
-    : "";
+// 기준 시각: 예보 발표 시각(weather_base) 우선. stale 이면 강조해서 "최신 예보를 못 받았다"고 알림
+export function updatedLine(data) {
+  const base = fmtBase(data.weather_base);
+  if (data.stale) {
+    return `<span class="updated is-stale">${icon.clock(16)}${t("list.stale", { t: base ?? fmtGenerated(data.generated_at) })}</span>`;
+  }
+  const when = base ? t("list.base", { t: base }) : data.generated_at ? t("list.updated", { t: fmtGenerated(data.generated_at) }) : "";
+  return `<span class="updated">${when ? `${when} · ` : ""}${t("list.photos")}</span>`;
 }

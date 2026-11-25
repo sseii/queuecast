@@ -52,6 +52,24 @@ export function levelName(level) {
   return LEVELS[level]?.[lang()] ?? "";
 }
 
+// 대기 규모(대·중·소). 엔진의 scale 을 쓰고, 없으면 expected_audience(객석 수)로 계산.
+// 화면에는 인원수를 쓰지 않고 규모만 보여 준다 (docs/JSON_형식.md)
+export function scaleOf(show) {
+  if (["large", "medium", "small"].includes(show.scale)) return show.scale;
+  const n = show.expected_audience;
+  if (n == null) return null;
+  return n >= 10000 ? "large" : n >= 5000 ? "medium" : "small";
+}
+
+// weather_base(예보 발표 시각) → "11월 25일 14시" / "Nov 25, 14:00"
+export function fmtBase(iso) {
+  const m = iso?.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return null;
+  return lang() === "en"
+    ? `${MON_EN[Number(m[2]) - 1]} ${Number(m[3])}, ${m[4]}:${m[5]}`
+    : `${Number(m[2])}월 ${Number(m[3])}일 ${Number(m[4])}시`;
+}
+
 // 예상 관객 수 15000 → "15,000"
 export function fmtPeople(n) {
   return n == null ? null : Number(n).toLocaleString("en-US");
@@ -70,8 +88,10 @@ export function fillTemplate(text, show, l = lang()) {
     const ph = `{${key}}`;
     if (!out.includes(ph)) continue;
     if (val == null) {
-      out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), "");
-      out = out.split(ph).join(l === "en" ? "N/A" : "정보 없음");
+      // 만차 예상 시각이 없으면 "(대중교통 이용 권장)" (이슈 #7), 그 밖의 값은 괄호째 지운다
+      const instead = key === "parking_full_eta" ? (l === "en" ? " (public transport recommended)" : " (대중교통 이용 권장)") : "";
+      out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), instead);
+      out = out.split(ph).join(key === "parking_full_eta" ? (l === "en" ? "public transport recommended" : "대중교통 이용 권장") : l === "en" ? "N/A" : "정보 없음");
     } else {
       out = out.split(ph).join(esc(val));
     }

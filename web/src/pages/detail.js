@@ -12,9 +12,10 @@ import { art } from "../components/art.js";
 import { icon } from "../components/icons.js";
 import { countdown, startCountdown, stopCountdown, timeline, packList, bindPack, shareButton, bindShare } from "../components/dayPlan.js";
 import { photosFor, photoImg } from "../photos.js";
-import { esc, dateParts, mood, round, fmtGenerated, fmtPeople, levelName, venueName, themeOf, vtName, levelOf, showKey } from "../util.js";
+import { esc, dateParts, mood, round, fmtGenerated, levelName, venueName, themeOf, vtName, levelOf, showKey } from "../util.js";
 import { themeChips } from "../components/chips.js";
 import { t, lang } from "../i18n.js";
+import { updatedLine } from "./list.js";
 
 export async function renderDetail(app, mode, id, view = "fan") {
   const [data, actions] = await Promise.all([loadShows(mode), loadActions()]);
@@ -32,7 +33,6 @@ export async function renderDetail(app, mode, id, view = "fan") {
   const theme = themeOf(show);
   document.body.dataset.theme = theme;
   const d = dateParts(show.date);
-  const people = fmtPeople(show.expected_audience);
   const [p1, p2, p3] = photosFor(theme, show.id, 3);
   const others = (data.shows ?? [])
     .filter((s) => showKey(s) !== showKey(show))
@@ -54,7 +54,7 @@ export async function renderDetail(app, mode, id, view = "fan") {
               </div>
               <h1>${esc(show.title)}</h1>
               <p class="ticket-when"><b>${d.md}</b> ${d.wd} ${esc(show.start_time)}<span class="sep"></span>${esc(venueName(show.venue))}
-                ${people ? `<span class="sep"></span>${t("hero.people", { n: people })}` : ""}</p>
+</p>
             </div>
           </div>
           <div class="cell">${art(theme, show.id + "b", 300, 190)}${photoImg(p2, 600)}</div>
@@ -92,7 +92,7 @@ export async function renderDetail(app, mode, id, view = "fan") {
           : ""
       }
 
-      <p class="fine updated-foot">${data.generated_at ? t("foot", { t: fmtGenerated(data.generated_at), m: t(`foot.${mode}`) }) : t("list.photos")}</p>
+      <p class="fine updated-foot">${updatedLine(data)}</p>
     </div>
   `;
 
