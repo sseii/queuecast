@@ -1,288 +1,288 @@
 {
-  "generated_at": "2026-11-24T05:30:00+09:00",
+  "generated_at": "2026-11-25T15:07:51+09:00",
+  "weather_base": "2026-11-25T14:00:00+09:00",
   "weather_source": "기상청 단기예보 (격자 nx=62, ny=126 송파구)",
   "show_source": "KOPIS 공연목록",
   "shows": [
     {
-      "id": "PF280001",
-      "title": "DAY6 Special Concert: The Present",
+      "id": "PF301499",
+      "title": "조용필 & 위대한 탄생 전국투어 콘서트 [서울]",
+      "genre": "대중음악",
       "venue": "KSPO DOME",
-      "date": "2026-12-20",
-      "start_time": "18:00",
-      "day_type": "weekend",
-      "foreign_audience": true,
-      "wait_window": {
-        "start": "14:00",
-        "end": "18:00"
-      },
-      "season": "winter",
-      "risk": {
-        "level": "caution",
-        "peak_feel": -11.2,
-        "peak_time": "17:00"
-      },
-      "hourly": [
-        {
-          "time": "14:00",
-          "temp": -4.0,
-          "humidity": 55,
-          "wind": 3.8,
-          "feel": -9.1,
-          "level": "safe"
-        },
-        {
-          "time": "15:00",
-          "temp": -4.5,
-          "humidity": 55,
-          "wind": 4.5,
-          "feel": -10.3,
-          "level": "caution"
-        },
-        {
-          "time": "16:00",
-          "temp": -5.0,
-          "humidity": 60,
-          "wind": 4.7,
-          "feel": -10.9,
-          "level": "caution"
-        },
-        {
-          "time": "17:00",
-          "temp": -5.5,
-          "humidity": 60,
-          "wind": 4.6,
-          "feel": -11.2,
-          "level": "caution"
-        },
-        {
-          "time": "18:00",
-          "temp": -6.0,
-          "humidity": 65,
-          "wind": 3.9,
-          "feel": -11.0,
-          "level": "caution"
-        }
-      ],
-      "parking_full_eta": "15:00",
-      "recommended_arrival": "16:30",
-      "facilities": [
-        {
-          "type": "화장실",
-          "place": "KSPO DOME",
-          "detail": "1번 게이트 옆",
-          "lat": 37.5197,
-          "lng": 127.1273,
-          "distance_m": 80
-        },
-        {
-          "type": "음수대",
-          "place": "평화의 광장",
-          "detail": "광장 입구",
-          "lat": 37.5205,
-          "lng": 127.1229,
-          "distance_m": 320
-        },
-        {
-          "type": "자판기",
-          "place": "KSPO DOME",
-          "detail": "매표소 앞",
-          "lat": 37.5193,
-          "lng": 127.127,
-          "distance_m": 60
-        },
-        {
-          "type": "실내 쉼터",
-          "place": "KSPO DOME",
-          "detail": "1층 로비 (예시)",
-          "lat": 37.5196,
-          "lng": 127.1272,
-          "distance_m": 40
-        }
-      ],
-      "expected_audience": 15000,
-      "genre": "대중음악"
-    },
-    {
-      "id": "EX-XMAS",
-      "title": "(예시) 올림픽공원 크리스마스 파티",
-      "venue": "올림픽홀",
-      "date": "2026-12-24",
+      "date": "2026-11-27",
       "start_time": "19:00",
       "day_type": "weekday",
-      "foreign_audience": false,
+      "foreign_audience": null,
       "wait_window": {
         "start": "17:00",
         "end": "19:00"
       },
       "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
       "risk": {
-        "level": "caution",
-        "peak_feel": -12.4,
-        "peak_time": "18:00"
+        "level": "safe",
+        "peak_feel": 12.0,
+        "peak_time": "19:00"
       },
       "hourly": [
         {
           "time": "17:00",
-          "temp": -5.0,
-          "humidity": 50,
-          "wind": 4.2,
-          "feel": -11.0,
-          "level": "caution"
-        },
-        {
-          "time": "18:00",
-          "temp": -6.2,
-          "humidity": 55,
-          "wind": 4.4,
-          "feel": -12.4,
-          "level": "caution"
-        },
-        {
-          "time": "19:00",
-          "temp": -6.8,
-          "humidity": 55,
-          "wind": 3.6,
-          "feel": -12.1,
-          "level": "caution"
-        }
-      ],
-      "parking_full_eta": null,
-      "recommended_arrival": "18:30",
-      "facilities": [
-        {
-          "type": "화장실",
-          "place": "KSPO DOME",
-          "detail": "1번 게이트 옆",
-          "lat": 37.5197,
-          "lng": 127.1273,
-          "distance_m": 80
-        },
-        {
-          "type": "음수대",
-          "place": "평화의 광장",
-          "detail": "광장 입구",
-          "lat": 37.5205,
-          "lng": 127.1229,
-          "distance_m": 320
-        },
-        {
-          "type": "자판기",
-          "place": "KSPO DOME",
-          "detail": "매표소 앞",
-          "lat": 37.5193,
-          "lng": 127.127,
-          "distance_m": 60
-        },
-        {
-          "type": "실내 쉼터",
-          "place": "올림픽홀",
-          "detail": "1층 로비 (예시)",
-          "lat": 37.516,
-          "lng": 127.1225,
-          "distance_m": 30
-        }
-      ],
-      "expected_audience": 2400,
-      "genre": "복합"
-    },
-    {
-      "id": "EX-BAND",
-      "title": "(예시) 겨울 밴드 콘서트",
-      "venue": "핸드볼경기장",
-      "date": "2026-12-26",
-      "start_time": "17:00",
-      "day_type": "weekend",
-      "foreign_audience": false,
-      "wait_window": {
-        "start": "13:00",
-        "end": "17:00"
-      },
-      "season": "winter",
-      "risk": {
-        "level": "safe",
-        "peak_feel": -6.3,
-        "peak_time": "16:00"
-      },
-      "hourly": [
-        {
-          "time": "13:00",
-          "temp": -1.0,
-          "humidity": 45,
-          "wind": 2.1,
-          "feel": -3.9,
+          "temp": 15.0,
+          "humidity": 80,
+          "wind": 2.5,
+          "feel": 15.0,
           "level": "safe"
         },
         {
-          "time": "14:00",
-          "temp": -1.2,
-          "humidity": 45,
-          "wind": 2.4,
-          "feel": -4.4,
+          "time": "18:00",
+          "temp": 13.0,
+          "humidity": 85,
+          "wind": 2.1,
+          "feel": 13.0,
+          "level": "safe"
+        },
+        {
+          "time": "19:00",
+          "temp": 12.0,
+          "humidity": 85,
+          "wind": 2.0,
+          "feel": 12.0,
+          "level": "safe"
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "17:00",
+      "facilities": []
+    },
+    {
+      "id": "PF302131",
+      "title": "다이나믹 듀오 단독 콘서트: 가끔씩 오래 보자 [서울]",
+      "genre": "대중음악",
+      "venue": "올림픽홀",
+      "date": "2026-11-27",
+      "start_time": "20:00",
+      "day_type": "weekday",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "18:00",
+        "end": "20:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 12.0,
+        "peak_time": "19:00"
+      },
+      "hourly": [
+        {
+          "time": "18:00",
+          "temp": 13.0,
+          "humidity": 85,
+          "wind": 2.1,
+          "feel": 13.0,
+          "level": "safe"
+        },
+        {
+          "time": "19:00",
+          "temp": 12.0,
+          "humidity": 85,
+          "wind": 2.0,
+          "feel": 12.0,
+          "level": "safe"
+        },
+        {
+          "time": "20:00",
+          "temp": 12.0,
+          "humidity": 85,
+          "wind": 2.0,
+          "feel": 12.0,
+          "level": "safe"
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "18:00",
+      "facilities": []
+    },
+    {
+      "id": "PF286543",
+      "title": "백 번째 리뷰",
+      "genre": "연극",
+      "venue": "기타",
+      "date": "2026-11-28",
+      "start_time": "15:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "11:00",
+        "end": "15:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 6.8,
+        "peak_time": "15:00"
+      },
+      "hourly": [
+        {
+          "time": "12:00",
+          "temp": 8.0,
+          "humidity": 55,
+          "wind": 1.0,
+          "feel": 8.0,
           "level": "safe"
         },
         {
           "time": "15:00",
-          "temp": -1.8,
+          "temp": 8.0,
           "humidity": 50,
-          "wind": 2.6,
-          "feel": -5.2,
+          "wind": 2.0,
+          "feel": 6.8,
           "level": "safe"
-        },
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "11:00",
+      "facilities": []
+    },
+    {
+      "id": "PF293285",
+      "title": "최현우 30주년 기념 공연: LEGACY",
+      "genre": "서커스/마술",
+      "venue": "우리금융아트홀",
+      "date": "2026-11-28",
+      "start_time": "15:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "11:00",
+        "end": "15:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 6.8,
+        "peak_time": "15:00"
+      },
+      "hourly": [
         {
-          "time": "16:00",
-          "temp": -2.6,
-          "humidity": 50,
-          "wind": 2.8,
-          "feel": -6.3,
-          "level": "safe"
-        },
-        {
-          "time": "17:00",
-          "temp": -3.0,
+          "time": "12:00",
+          "temp": 8.0,
           "humidity": 55,
-          "wind": 2.2,
-          "feel": -6.1,
+          "wind": 1.0,
+          "feel": 8.0,
+          "level": "safe"
+        },
+        {
+          "time": "15:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 2.0,
+          "feel": 6.8,
           "level": "safe"
         }
       ],
-      "parking_full_eta": "15:30",
-      "recommended_arrival": "15:00",
-      "facilities": [
+      "parking_full_eta": null,
+      "recommended_arrival": "11:00",
+      "facilities": []
+    },
+    {
+      "id": "PF301499",
+      "title": "조용필 & 위대한 탄생 전국투어 콘서트 [서울]",
+      "genre": "대중음악",
+      "venue": "KSPO DOME",
+      "date": "2026-11-28",
+      "start_time": "18:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "14:00",
+        "end": "18:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 3.4,
+        "peak_time": "18:00"
+      },
+      "hourly": [
         {
-          "type": "화장실",
-          "place": "KSPO DOME",
-          "detail": "1번 게이트 옆",
-          "lat": 37.5197,
-          "lng": 127.1273,
-          "distance_m": 80
+          "time": "15:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 2.0,
+          "feel": 6.8,
+          "level": "safe"
         },
         {
-          "type": "음수대",
-          "place": "평화의 광장",
-          "detail": "광장 입구",
-          "lat": 37.5205,
-          "lng": 127.1229,
-          "distance_m": 320
-        },
-        {
-          "type": "자판기",
-          "place": "KSPO DOME",
-          "detail": "매표소 앞",
-          "lat": 37.5193,
-          "lng": 127.127,
-          "distance_m": 60
-        },
-        {
-          "type": "실내 쉼터",
-          "place": "핸드볼경기장",
-          "detail": "로비 (예시)",
-          "lat": 37.5172,
-          "lng": 127.126,
-          "distance_m": 50
+          "time": "18:00",
+          "temp": 5.0,
+          "humidity": 55,
+          "wind": 2.0,
+          "feel": 3.4,
+          "level": "safe"
         }
       ],
-      "expected_audience": 5000,
-      "genre": "대중음악"
+      "parking_full_eta": null,
+      "recommended_arrival": "14:00",
+      "facilities": []
+    },
+    {
+      "id": "PF302131",
+      "title": "다이나믹 듀오 단독 콘서트: 가끔씩 오래 보자 [서울]",
+      "genre": "대중음악",
+      "venue": "올림픽홀",
+      "date": "2026-11-28",
+      "start_time": "18:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "14:00",
+        "end": "18:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "expected_audience": null,
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 3.4,
+        "peak_time": "18:00"
+      },
+      "hourly": [
+        {
+          "time": "15:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 2.0,
+          "feel": 6.8,
+          "level": "safe"
+        },
+        {
+          "time": "18:00",
+          "temp": 5.0,
+          "humidity": 55,
+          "wind": 2.0,
+          "feel": 3.4,
+          "level": "safe"
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "14:00",
+      "facilities": []
     }
   ]
 }
