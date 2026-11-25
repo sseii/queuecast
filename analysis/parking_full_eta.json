@@ -1,0 +1,74 @@
+{
+  "KSPO DOME": {
+    "zone": "P4·P5 (북2문)",
+    "full_at_cars": 1880,
+    "weekday": {
+      "eta": null,
+      "note": "정오 이전부터 혼잡(일반 이용 차량), 공연 관객 만차 시각 구분 불가",
+      "reach_rate": 0.66,
+      "days": 35,
+      "reached": 23
+    },
+    "weekend": {
+      "eta": "13:00",
+      "note": "",
+      "reach_rate": 0.65,
+      "days": 101,
+      "reached": 66
+    }
+  },
+  "핸드볼경기장": {
+    "zone": "P6·P7 (남2문)",
+    "full_at_cars": 1990,
+    "weekday": {
+      "eta": null,
+      "note": "정오 이전부터 혼잡(일반 이용 차량), 공연 관객 만차 시각 구분 불가",
+      "reach_rate": 0.6,
+      "days": 35,
+      "reached": 21
+    },
+    "weekend": {
+      "eta": "13:00",
+      "note": "",
+      "reach_rate": 0.61,
+      "days": 101,
+      "reached": 62
+    }
+  },
+  "우리금융아트홀": {
+    "zone": "P6·P7 (남2문)",
+    "full_at_cars": 1990,
+    "weekday": {
+      "eta": null,
+      "note": "정오 이전부터 혼잡(일반 이용 차량), 공연 관객 만차 시각 구분 불가",
+      "reach_rate": 0.6,
+      "days": 35,
+      "reached": 21
+    },
+    "weekend": {
+      "eta": "13:00",
+      "note": "",
+      "reach_rate": 0.61,
+      "days": 101,
+      "reached": 62
+    }
+  },
+  "올림픽홀": {
+    "zone": "P2 (동2문)",
+    "full_at_cars": 2617,
+    "weekday": {
+      "eta": null,
+      "note": "",
+      "reach_rate": 0.11,
+      "days": 35,
+      "reached": 4
+    },
+    "weekend": {
+      "eta": null,
+      "note": "",
+      "reach_rate": 0.24,
+      "days": 101,
+      "reached": 24
+    }
+  }
+}
