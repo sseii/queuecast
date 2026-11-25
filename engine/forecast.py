@@ -10,6 +10,7 @@ import math
 import os
 import re
 import sys
+import tempfile
 import time
 from datetime import date as Date, datetime, timedelta
 
@@ -283,7 +284,7 @@ def build(details, weather, now, weather_base):
              if not (parsable(det.get("time_guide")) and start_time(det.get("time_guide"), d) is None)]
     shows.sort(key=lambda s: (s["date"], s["start_time"] or "99:99", s["id"] or ""))
     return {"generated_at": now.replace(microsecond=0).isoformat(), "weather_base": weather_base,
-            "weather_source": WEATHER_SOURCE, "show_source": SHOW_SOURCE, "shows": shows}
+            "weather_source": WEATHER_SOURCE, "show_source": SHOW_SOURCE, "stale": False, "shows": shows}
 
 
 def _overlaps(s, today, last):
@@ -356,21 +357,50 @@ def run():
     return build(details, weather, now, weather_base)
 
 
-def main(argv):
+def write_json(path, data):
+    """임시 파일에 다 쓴 뒤 os.replace로 바꿔, 중간에 끊겨도 기존 파일이 깨지지 않게 한다."""
+    d = os.path.dirname(path)
+    os.makedirs(d, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=d, prefix=".forecast.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        raise
+
+
+def mark_stale(path):
+    """갱신 실패: 기존 파일의 stale만 true로 바꿔 저장. 기존 파일이 없거나 깨졌으면 아무것도 쓰지 않는다."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return False
+    data["stale"] = True
+    write_json(path, data)
+    return True
+
+
+def main(argv, out_path=None):
+    path = out_path or os.path.normpath(OUT_PATH)
     try:
         data = run()
-    except ApiError as e:
-        _log(f"실패: {e}")
+    except Exception as e:               # ApiError 메시지는 키·URL 없이 만든다. 그 밖의 예외는 종류만 남긴다
+        _log(f"실패: {e if isinstance(e, ApiError) else type(e).__name__}")
+        if "--stdout" not in argv:
+            if mark_stale(path):
+                _log("직전 forecast.json 유지, stale=true로 표시")
+            else:
+                _log("기존 forecast.json이 없어 아무것도 쓰지 않음")
         return 1
-    text = json.dumps(data, ensure_ascii=False, indent=2)
     if "--stdout" in argv:
         sys.stdout.reconfigure(errors="replace")
-        print(text)
+        print(json.dumps(data, ensure_ascii=False, indent=2))
     else:
-        path = os.path.normpath(OUT_PATH)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(text + "\n")
+        write_json(path, data)
         _log(f"저장: web/public/data/forecast.json (공연 {len(data['shows'])}건)")
     return 0
 

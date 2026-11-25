@@ -1,6 +1,9 @@
 """API 키 없이 실행: python -m unittest test_forecast -v (engine 폴더에서)."""
 import csv
+import io
+import json
 import os
+import tempfile
 import time
 import unittest
 from datetime import datetime
@@ -9,7 +12,7 @@ from unittest import mock
 import feel
 import forecast
 import kopis
-from common import KST
+from common import KST, ApiError
 
 REPLAY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "analysis", "replay_input.csv")
 GUIDE = "화요일 ~ 금요일(19:30), 토요일 ~ 일요일(14:00,18:30), HOL(15:00)"
@@ -236,6 +239,60 @@ class ParkingFacilityTest(unittest.TestCase):
             self.assertTrue(1 <= len(ds) <= 3, t)
             self.assertEqual(ds, sorted(ds))
         self.assertEqual(forecast.nearest_facilities("기타"), [])
+
+
+class StaleTest(unittest.TestCase):
+    OLD = {"generated_at": "2026-11-25T05:30:00+09:00", "stale": False, "shows": [{"id": "OLD"}]}
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.path = os.path.join(self.dir.name, "forecast.json")
+
+    def tearDown(self):
+        self.dir.cleanup()
+
+    def write_old(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.OLD, f)
+
+    def read(self):
+        with open(self.path, encoding="utf-8") as f:
+            return json.load(f)
+
+    def run_main(self, side_effect=None, return_value=None):
+        err = io.StringIO()
+        with mock.patch.object(forecast, "run", side_effect=side_effect, return_value=return_value), \
+                mock.patch("sys.stderr", err):
+            code = forecast.main([], out_path=self.path)
+        return code, err.getvalue()
+
+    def test_api_error_keeps_old_file(self):
+        self.write_old()
+        code, log = self.run_main(side_effect=ApiError("기상청 단기예보 HTTP 500"))
+        self.assertEqual(code, 1)
+        self.assertEqual(self.read(), dict(self.OLD, stale=True))
+        self.assertEqual(os.listdir(self.dir.name), ["forecast.json"])        # 임시 파일 안 남음
+
+    def test_other_error_hides_message(self):
+        self.write_old()
+        code, log = self.run_main(side_effect=RuntimeError("https://x/?serviceKey=SECRET"))
+        self.assertEqual(code, 1)
+        self.assertTrue(self.read()["stale"])
+        self.assertNotIn("SECRET", log)
+        self.assertNotIn("http", log)
+
+    def test_no_old_file_writes_nothing(self):
+        code, _ = self.run_main(side_effect=ApiError("x"))
+        self.assertEqual(code, 1)
+        self.assertEqual(os.listdir(self.dir.name), [])
+
+    def test_success_writes_stale_false(self):
+        self.write_old()
+        now = datetime(2026, 11, 25, 5, 30, tzinfo=KST)
+        code, _ = self.run_main(return_value=forecast.build([], {}, now, None))
+        self.assertEqual(code, 0)
+        self.assertFalse(self.read()["stale"])
+        self.assertEqual(self.read()["shows"], [])
 
 
 class BuildTest(unittest.TestCase):
