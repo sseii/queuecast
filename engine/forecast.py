@@ -28,6 +28,7 @@ VENUE_AUDIENCE = {"KSPO DOME": 15000, "핸드볼경기장": 6500, "올림픽홀"
 SCALE_LARGE, SCALE_MEDIUM = 10000, 5000     # 이상이면 large, medium, 그 아래 small
 KOPIS_GAP_S = 0.3                           # KOPIS 호출 사이 최소 간격(초)
 PARK = "올림픽공원"
+MAIN_VENUES = ("KSPO DOME", "핸드볼경기장", "올림픽홀", "우리금융아트홀")
 MAX_FILL_GAP_H = 6                         # 보간할 때 앞뒤 값을 찾는 최대 거리 (단기예보 4일째는 3시간 간격)
 
 # 공휴일 (대체공휴일 포함)
@@ -327,6 +328,11 @@ def in_park(detail):
     return PARK in (detail.get("facility") or "")
 
 
+def keep_venue(detail):
+    """올림픽공원 안이면서 4개 공연장 중 하나일 때만 남긴다 (뮤즈라이브 등 '기타'는 제외, 11/26 결정)."""
+    return in_park(detail) and detail.get("venue") in MAIN_VENUES
+
+
 def run():
     kopis.get = _kopis_get          # kopis.py는 그대로 두고 호출 간격만 감싼다
     now = now_kst()
@@ -345,8 +351,8 @@ def run():
         except Exception as e:          # 메시지에 URL이 섞일 수 있어 종류만 남긴다
             _log(f"  상세 건너뜀 {s['id']}: {type(e).__name__}")
             continue
-        if not in_park(det):
-            _log(f"  올림픽공원 밖 공연장 제외 {s['id']}: {det.get('facility')}")
+        if not keep_venue(det):
+            _log(f"  공연장 제외 {s['id']}: {det.get('facility')}")
             continue
         details.append(det)
     w = kma.fetch_hourly()          # 실패하면 main에서 직전 파일을 stale로 남긴다

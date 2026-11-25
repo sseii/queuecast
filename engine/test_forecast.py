@@ -200,6 +200,11 @@ class KopisTest(unittest.TestCase):
         self.assertFalse(forecast.in_park({"facility": "샤롯데씨어터"}))
         self.assertFalse(forecast.in_park({"facility": None}))
 
+    def test_keep_venue(self):
+        self.assertTrue(forecast.keep_venue({"facility": "올림픽공원 (올림픽홀)", "venue": "올림픽홀"}))
+        self.assertFalse(forecast.keep_venue({"facility": "올림픽공원 (뮤즈라이브)", "venue": "기타"}))
+        self.assertFalse(forecast.keep_venue({"facility": "다른 공원 (KSPO DOME)", "venue": "KSPO DOME"}))
+
     def test_call_gap(self):
         stamps = []
         with mock.patch.object(forecast, "get", side_effect=lambda *a, **k: stamps.append(time.monotonic())):
