@@ -23,3 +23,6 @@ __pycache__/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# 엔진 API 응답 확인 결과
+engine/out/
