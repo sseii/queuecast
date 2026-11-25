@@ -41,6 +41,7 @@
       "expected_audience": 15000,
       "scale": "large",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": { "level": "safe", "peak_feel": 3.4, "peak_time": "18:00" },
       "hourly": [
         { "time": "14:00", "temp": 8.0, "humidity": 50, "wind": 2.0, "feel": 6.8, "level": "safe" },
@@ -75,6 +76,7 @@
 | `expected_audience` | 숫자 또는 null | 예정 공연은 실제 관객 수를 알 수 없으므로 **공연장 객석 수**를 넣는다: KSPO DOME 15000, 핸드볼경기장 6500, 올림픽홀 3000, 우리금융아트홀 1200, 그 외 null |
 | `scale` | `"large"` / `"medium"` / `"small"` / null | 예상 대기 규모(대·중·소). expected_audience 1만 이상 large, 5천~1만 미만 medium, 5천 미만 small |
 | `exposed_people` | 숫자 | 엔진 내부 참고값. **화면에는 인원수로 표시하지 않고** `scale`(대·중·소)만 보여준다 |
+| `actual_audience` | 숫자 또는 null | **replay_2025.json에만 있음, forecast.json에서는 null.** 사례일의 실제 공연관람객 수 (2025 연계 데이터 `공연관람객수` 최댓값, 안전 리포트용) |
 | `risk` | 객체 | `level` 대기 시간대 중 가장 높은 단계, `peak_feel`·`peak_time` 그때의 체감온도와 시각 |
 | `hourly[]` | 배열 | 대기 시간대의 시간별 값. `temp` 기온(℃), `humidity` 습도(%), `wind` 풍속(m/s), `feel` 체감온도(℃), `level` 단계. `filled`가 true면 기상청 값이 없는 정시를 앞뒤 값으로 선형 보간한 행이다 |
 | `parking_full_eta` | 문자열 또는 null | 만차 예상 시각. `analysis/parking_full_eta.json`(공연장 × 평일/주말)에서 찾아 넣음. 이력이 없으면 null → 웹은 "대중교통 이용 권장" |
