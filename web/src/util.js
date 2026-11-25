@@ -1,0 +1,150 @@
+// 공통 상수·도우미 함수
+
+// 단계 코드 → 표시 정보 (docs/JSON_형식.md 단계 표 기준)
+export const LEVELS = {
+  safe: { ko: "안전", en: "Safe", rank: 0 },
+  caution: { ko: "주의", en: "Caution", rank: 1 },
+  warning: { ko: "경고", en: "Warning", rank: 2 },
+  danger: { ko: "위험", en: "Danger", rank: 3 },
+};
+
+export function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+  );
+}
+
+export function fmtFeel(n) {
+  return n == null ? "-" : `${Number(n).toFixed(1)}℃`;
+}
+
+const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
+const WEEK_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// ISO 시각 → "11월 24일 05:30"
+export function fmtGenerated(iso) {
+  if (!iso) return "-";
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return iso;
+  return `${Number(m[2])}월 ${Number(m[3])}일 ${m[4]}:${m[5]}`;
+}
+
+// actions.json 문구의 {peak_feel} 등을 forecast 값으로 바꾼다.
+// 값이 null 이면: 괄호 안에 있으면 괄호째 지우고, 아니면 "정보 없음"/"N/A".
+export function fillTemplate(text, show, lang = "ko") {
+  const values = {
+    peak_feel: show.risk?.peak_feel != null ? Number(show.risk.peak_feel).toFixed(1) : null,
+    recommended_arrival: show.recommended_arrival,
+    parking_full_eta: show.parking_full_eta,
+  };
+  let out = esc(text);
+  for (const [key, val] of Object.entries(values)) {
+    const ph = `{${key}}`;
+    if (!out.includes(ph)) continue;
+    if (val == null) {
+      out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), "");
+      out = out.split(ph).join(lang === "en" ? "N/A" : "정보 없음");
+    } else {
+      out = out.split(ph).join(esc(val));
+    }
+  }
+  return out;
+}
+
+// 친근한 상태 문구 (화면용)
+export const MOOD = {
+  summer: {
+    safe: { emoji: "😎", ko: "괜찮아요", en: "All good" },
+    caution: { emoji: "🥵", ko: "더워요", en: "Hot" },
+    warning: { emoji: "🔥", ko: "많이 더워요", en: "Very hot" },
+    danger: { emoji: "🚨", ko: "위험해요", en: "Dangerous heat" },
+  },
+  winter: {
+    safe: { emoji: "😊", ko: "괜찮아요", en: "All good" },
+    caution: { emoji: "🥶", ko: "추워요", en: "Cold" },
+    warning: { emoji: "🧊", ko: "많이 추워요", en: "Very cold" },
+  },
+};
+
+export function mood(show, level = show.risk?.level ?? "safe") {
+  return MOOD[show.season]?.[level] ?? MOOD.winter.safe;
+}
+
+// 가방 챙기기: 날씨 준비물(actions.json 관객 안내 문구와 같게) + 공연 분위기별 설렘 준비물
+export const PACK = {
+  summer: [
+    { id: "water", ko: "물", en: "Water" },
+    { id: "parasol", ko: "양산", en: "Parasol" },
+    { id: "hat", ko: "모자", en: "Hat" },
+  ],
+  winter: [
+    { id: "gloves", ko: "장갑", en: "Gloves" },
+    { id: "scarf", ko: "목도리", en: "Scarf" },
+    { id: "warmer", ko: "핫팩", en: "Hand warmers" },
+  ],
+  concert: [
+    { id: "stick", ko: "응원봉", en: "Light stick" },
+    { id: "battery", ko: "보조배터리", en: "Power bank" },
+    { id: "ticket", ko: "티켓·신분증", en: "Ticket & ID" },
+  ],
+  christmas: [
+    { id: "redgreen", ko: "빨강·초록 포인트 아이템", en: "Something red or green" },
+    { id: "battery", ko: "보조배터리", en: "Power bank" },
+    { id: "ticket", ko: "티켓·신분증", en: "Ticket & ID" },
+  ],
+};
+
+// "2026-12-20" → { md: "12.20", wd: "일" }
+export function dateParts(ymd, lang = "ko") {
+  if (!ymd) return { md: "-", wd: "" };
+  const [y, m, d] = ymd.split("-").map(Number);
+  const w = new Date(y, m - 1, d).getDay();
+  return { md: `${m}.${d}`, wd: (lang === "en" ? WEEK_EN : WEEK_KO)[w] };
+}
+
+export function round(n) {
+  if (n == null) return "-";
+  const r = Math.round(Number(n));
+  return r < 0 ? `−${-r}` : String(r); // 진짜 마이너스 기호(−)가 숫자와 더 잘 붙어 보임
+}
+
+// 공연 분위기(테마). forecast.json 에 theme 필드가 있으면 그걸 쓰고,
+// 없으면 공연명으로 추정한다. (엔진에서 KOPIS 장르를 넘겨주면 더 정확해짐)
+export const THEMES = {
+  concert: { icon: "🎤", ko: "콘서트", greet: "무대 조명이 켜지기 전까지, 기다리는 시간도 즐겁게" },
+  christmas: { icon: "🎄", ko: "크리스마스 파티", greet: "따뜻하게 입고 와서 연말을 즐겨요" },
+};
+
+const XMAS = /크리스마스|성탄|홀리데이|캐롤|캐럴|산타|연말|파티|christmas|xmas|holiday|carol|party/i;
+
+export function themeOf(show) {
+  if (show.theme && THEMES[show.theme]) return show.theme;
+  return XMAS.test(show.title ?? "") ? "christmas" : "concert";
+}
+
+// 같은 공연은 항상 같은 그림이 나오도록 id 로 난수 고정
+export function seeded(key) {
+  let h = 1779033703;
+  for (const c of String(key)) h = Math.imul(h ^ c.charCodeAt(0), 3432918353);
+  return () => {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+export function vtName(id) {
+  return "t-" + String(id).replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+// 공연까지 남은 시간 (한국시간 기준)
+export function showTime(show) {
+  return new Date(`${show.date}T${show.start_time || "00:00"}:00+09:00`);
+}
+
+export function dday(show, now = Date.now()) {
+  const today = new Date(now + 9 * 3600e3).toISOString().slice(0, 10);
+  const diff = Math.round((Date.parse(show.date) - Date.parse(today)) / 86400e3);
+  if (Number.isNaN(diff) || diff < 0) return null;
+  return diff === 0 ? "D-DAY" : `D-${diff}`;
+}

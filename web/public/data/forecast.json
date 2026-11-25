@@ -1,0 +1,258 @@
+{
+  "generated_at": "2026-11-24T05:30:00+09:00",
+  "weather_source": "기상청 단기예보 (격자 nx=62, ny=126 송파구)",
+  "show_source": "KOPIS 공연목록",
+  "shows": [
+    {
+      "id": "PF280001",
+      "title": "DAY6 Special Concert: The Present",
+      "venue": "KSPO DOME",
+      "date": "2026-12-20",
+      "start_time": "18:00",
+      "day_type": "weekend",
+      "foreign_audience": true,
+      "wait_window": {
+        "start": "14:00",
+        "end": "18:00"
+      },
+      "season": "winter",
+      "risk": {
+        "level": "caution",
+        "peak_feel": -11.2,
+        "peak_time": "17:00"
+      },
+      "hourly": [
+        {
+          "time": "14:00",
+          "temp": -4.0,
+          "humidity": 55,
+          "wind": 3.8,
+          "feel": -9.1,
+          "level": "safe"
+        },
+        {
+          "time": "15:00",
+          "temp": -4.5,
+          "humidity": 55,
+          "wind": 4.5,
+          "feel": -10.3,
+          "level": "caution"
+        },
+        {
+          "time": "16:00",
+          "temp": -5.0,
+          "humidity": 60,
+          "wind": 4.7,
+          "feel": -10.9,
+          "level": "caution"
+        },
+        {
+          "time": "17:00",
+          "temp": -5.5,
+          "humidity": 60,
+          "wind": 4.6,
+          "feel": -11.2,
+          "level": "caution"
+        },
+        {
+          "time": "18:00",
+          "temp": -6.0,
+          "humidity": 65,
+          "wind": 3.9,
+          "feel": -11.0,
+          "level": "caution"
+        }
+      ],
+      "parking_full_eta": "15:00",
+      "recommended_arrival": "16:30",
+      "facilities": [
+        {
+          "type": "화장실",
+          "place": "KSPO DOME",
+          "detail": "1번 게이트 옆",
+          "lat": 37.5197,
+          "lng": 127.1273,
+          "distance_m": 80
+        },
+        {
+          "type": "음수대",
+          "place": "평화의 광장",
+          "detail": "광장 입구",
+          "lat": 37.5205,
+          "lng": 127.1229,
+          "distance_m": 320
+        },
+        {
+          "type": "자판기",
+          "place": "KSPO DOME",
+          "detail": "매표소 앞",
+          "lat": 37.5193,
+          "lng": 127.127,
+          "distance_m": 60
+        }
+      ]
+    },
+    {
+      "id": "EX-XMAS",
+      "title": "(예시) 올림픽공원 크리스마스 파티",
+      "venue": "올림픽홀",
+      "date": "2026-12-24",
+      "start_time": "19:00",
+      "day_type": "weekday",
+      "foreign_audience": false,
+      "wait_window": {
+        "start": "17:00",
+        "end": "19:00"
+      },
+      "season": "winter",
+      "risk": {
+        "level": "caution",
+        "peak_feel": -12.4,
+        "peak_time": "18:00"
+      },
+      "hourly": [
+        {
+          "time": "17:00",
+          "temp": -5.0,
+          "humidity": 50,
+          "wind": 4.2,
+          "feel": -11.0,
+          "level": "caution"
+        },
+        {
+          "time": "18:00",
+          "temp": -6.2,
+          "humidity": 55,
+          "wind": 4.4,
+          "feel": -12.4,
+          "level": "caution"
+        },
+        {
+          "time": "19:00",
+          "temp": -6.8,
+          "humidity": 55,
+          "wind": 3.6,
+          "feel": -12.1,
+          "level": "caution"
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "18:30",
+      "facilities": [
+        {
+          "type": "화장실",
+          "place": "KSPO DOME",
+          "detail": "1번 게이트 옆",
+          "lat": 37.5197,
+          "lng": 127.1273,
+          "distance_m": 80
+        },
+        {
+          "type": "음수대",
+          "place": "평화의 광장",
+          "detail": "광장 입구",
+          "lat": 37.5205,
+          "lng": 127.1229,
+          "distance_m": 320
+        },
+        {
+          "type": "자판기",
+          "place": "KSPO DOME",
+          "detail": "매표소 앞",
+          "lat": 37.5193,
+          "lng": 127.127,
+          "distance_m": 60
+        }
+      ]
+    },
+    {
+      "id": "EX-BAND",
+      "title": "(예시) 겨울 밴드 콘서트",
+      "venue": "핸드볼경기장",
+      "date": "2026-12-26",
+      "start_time": "17:00",
+      "day_type": "weekend",
+      "foreign_audience": false,
+      "wait_window": {
+        "start": "13:00",
+        "end": "17:00"
+      },
+      "season": "winter",
+      "risk": {
+        "level": "safe",
+        "peak_feel": -6.3,
+        "peak_time": "16:00"
+      },
+      "hourly": [
+        {
+          "time": "13:00",
+          "temp": -1.0,
+          "humidity": 45,
+          "wind": 2.1,
+          "feel": -3.9,
+          "level": "safe"
+        },
+        {
+          "time": "14:00",
+          "temp": -1.2,
+          "humidity": 45,
+          "wind": 2.4,
+          "feel": -4.4,
+          "level": "safe"
+        },
+        {
+          "time": "15:00",
+          "temp": -1.8,
+          "humidity": 50,
+          "wind": 2.6,
+          "feel": -5.2,
+          "level": "safe"
+        },
+        {
+          "time": "16:00",
+          "temp": -2.6,
+          "humidity": 50,
+          "wind": 2.8,
+          "feel": -6.3,
+          "level": "safe"
+        },
+        {
+          "time": "17:00",
+          "temp": -3.0,
+          "humidity": 55,
+          "wind": 2.2,
+          "feel": -6.1,
+          "level": "safe"
+        }
+      ],
+      "parking_full_eta": "15:30",
+      "recommended_arrival": "15:00",
+      "facilities": [
+        {
+          "type": "화장실",
+          "place": "KSPO DOME",
+          "detail": "1번 게이트 옆",
+          "lat": 37.5197,
+          "lng": 127.1273,
+          "distance_m": 80
+        },
+        {
+          "type": "음수대",
+          "place": "평화의 광장",
+          "detail": "광장 입구",
+          "lat": 37.5205,
+          "lng": 127.1229,
+          "distance_m": 320
+        },
+        {
+          "type": "자판기",
+          "place": "KSPO DOME",
+          "detail": "매표소 앞",
+          "lat": 37.5193,
+          "lng": 127.127,
+          "distance_m": 60
+        }
+      ]
+    }
+  ]
+}

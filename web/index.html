@@ -3,20 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>올팍 시트뷰</title>
+    <meta name="description" content="올림픽공원 공연 대기 시간대 폭염·한파 위험 예보" />
+    <meta name="theme-color" content="#5B4BDB" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎫</text></svg>" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <title>큐캐스트 QueueCast</title>
   </head>
   <body>
-    <header>
-      <h1>올팍 시트뷰</h1>
-      <nav>
-        <a href="#main">공연</a>
-        <a href="#seat">좌석 시야</a>
-        <a href="#arrival">도착 안내</a>
-        <a href="#barrierfree">배리어프리</a>
-        <a href="#after">공연 후</a>
-      </nav>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a href="#/" class="logo" aria-label="큐캐스트 홈">
+          <svg class="logo-mark" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 0 0 4 2 2 0 0 1 0 4v1.5A1.5 1.5 0 0 0 4.5 19h15a1.5 1.5 0 0 0 1.5-1.5V16a2 2 0 0 1 0-4 2 2 0 0 0 0-4V6.5A1.5 1.5 0 0 0 19.5 5h-15A1.5 1.5 0 0 0 3 6.5Z"/><path d="M15 5v14" stroke-dasharray="2 2.5"/></svg>
+          <strong>큐캐스트</strong>
+        </a>
+        <nav class="mode-tabs" aria-label="데이터 선택">
+          <a href="#/" data-mode="forecast">다가오는 공연</a>
+          <a href="#/replay" data-mode="replay">2025 사례</a>
+        </nav>
+      </div>
     </header>
-    <main id="app"></main>
+    <main id="app" class="wrap"></main>
+    <footer class="site-footer wrap">
+      <p>2026 한국체육산업개발 공공데이터 활용 경진대회 출품작, 팀 33도</p>
+      <p id="sources"></p>
+    </footer>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
