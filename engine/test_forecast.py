@@ -206,6 +206,38 @@ class KopisTest(unittest.TestCase):
         self.assertTrue(all(g >= forecast.KOPIS_GAP_S - 0.01 for g in gaps), gaps)
 
 
+class ParkingFacilityTest(unittest.TestCase):
+    def test_parking_from_analysis(self):
+        self.assertEqual(forecast.parking_eta("KSPO DOME", "weekend"), "13:00")
+        self.assertIsNone(forecast.parking_eta("KSPO DOME", "weekday"))     # eta null
+        self.assertIsNone(forecast.parking_eta("기타", "weekend"))           # 표에 없음
+        self.assertIsNone(forecast.parking_eta("KSPO DOME", "weekend", table={}))
+
+    def test_parking_in_show(self):
+        weather, venue, _ = replay("2025-07-26")
+        s = build_one("2025-07-26", "토요일(18:00)", weather, venue)
+        self.assertEqual(s["parking_full_eta"], "13:00")
+
+    def test_facilities_sorted_and_limited(self):
+        data = {"venues": {"A": {"lat": 37.5, "lng": 127.0}},
+                "facilities": [{"type": "화장실", "place": f"p{i}", "detail": "", "lat": 37.5 + i * 0.001, "lng": 127.0}
+                               for i in (4, 1, 3, 2, 5)]
+                + [{"type": "음수대", "place": "w", "detail": "d", "lat": 37.5, "lng": 127.001}]}
+        out = forecast.nearest_facilities("A", data)
+        self.assertEqual([(f["type"], f["place"]) for f in out],
+                         [("음수대", "w"), ("화장실", "p1"), ("화장실", "p2"), ("화장실", "p3")])
+        self.assertEqual(set(out[0]), {"type", "place", "detail", "lat", "lng", "distance_m"})
+        self.assertAlmostEqual(out[1]["distance_m"], 111, delta=1)          # 위도 0.001도 ≈ 111m
+
+    def test_facilities_real_file(self):
+        out = forecast.nearest_facilities("KSPO DOME")
+        for t in forecast.FACILITY_TYPES:
+            ds = [f["distance_m"] for f in out if f["type"] == t]
+            self.assertTrue(1 <= len(ds) <= 3, t)
+            self.assertEqual(ds, sorted(ds))
+        self.assertEqual(forecast.nearest_facilities("기타"), [])
+
+
 class BuildTest(unittest.TestCase):
     def test_no_weather(self):
         s = build_one("2026-12-05", GUIDE, {}, "올림픽공원 (올림픽홀)")

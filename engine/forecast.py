@@ -6,6 +6,7 @@
 엔진은 숫자와 단계만 쓴다. 문구는 web/public/data/actions.json 에만 둔다.
 """
 import json
+import math
 import os
 import re
 import sys
@@ -34,6 +35,11 @@ HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08"
 WEATHER_SOURCE = f"기상청 단기예보 (격자 nx={kma.NX}, ny={kma.NY} 송파구)"
 SHOW_SOURCE = "KOPIS 공연목록"
 OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "web", "public", "data", "forecast.json")
+
+ANALYSIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "analysis")
+FACILITY_TYPES = ("음수대", "화장실", "자판기", "간이편의점")
+FACILITY_PER_TYPE = 3
+_analysis_cache = {}
 
 WEEKDAYS = "월화수목금토일"
 _SEGMENT = re.compile(r"([^()]*)\(([^)]*)\)")
@@ -113,6 +119,49 @@ def scale(audience):
     if audience >= SCALE_MEDIUM:
         return "medium"
     return "small"
+
+
+def _analysis(name):
+    """analysis/ 의 팀장 분석 JSON. 없거나 깨졌으면 빈 dict (해당 필드는 null·[])."""
+    if name not in _analysis_cache:
+        try:
+            with open(os.path.join(ANALYSIS_DIR, name), encoding="utf-8") as f:
+                _analysis_cache[name] = json.load(f)
+        except (OSError, ValueError):
+            _log(f"analysis/{name} 을 읽지 못해 빈 값으로 둡니다")
+            _analysis_cache[name] = {}
+    return _analysis_cache[name]
+
+
+def parking_eta(venue, dt_type, table=None):
+    """analysis/parking_full_eta.json 의 [venue][day_type]["eta"]. 없거나 null이면 None."""
+    table = _analysis("parking_full_eta.json") if table is None else table
+    return ((table.get(venue) or {}).get(dt_type) or {}).get("eta") or None
+
+
+def haversine_m(lat1, lng1, lat2, lng2):
+    r = 6371000.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp, dl = p2 - p1, math.radians(lng2 - lng1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def nearest_facilities(venue, data=None):
+    """공연장 좌표 기준 직선거리로 종류별 가까운 3개씩. 좌표가 없는 공연장(기타)은 []."""
+    data = _analysis("facilities.json") if data is None else data
+    c = (data.get("venues") or {}).get(venue)
+    if not c:
+        return []
+    out = []
+    for t in FACILITY_TYPES:
+        near = sorted(((haversine_m(c["lat"], c["lng"], f["lat"], f["lng"]), f)
+                       for f in data.get("facilities") or []
+                       if f.get("type") == t and f.get("lat") is not None and f.get("lng") is not None),
+                      key=lambda x: x[0])[:FACILITY_PER_TYPE]
+        out += [{"type": t, "place": f.get("place"), "detail": f.get("detail"), "lat": f["lat"], "lng": f["lng"],
+                 "distance_m": int(round(dist))} for dist, f in near]
+    return out
 
 
 def _hm(dt):
@@ -195,7 +244,8 @@ def build_show(detail, d, weather):
             "expected_audience": audience, "scale": scale(audience),
             "exposed_people": None,
             "risk": {"level": None, "peak_feel": None, "peak_time": None}, "hourly": [],
-            "parking_full_eta": None, "recommended_arrival": None, "facilities": []}
+            "parking_full_eta": parking_eta(venue, dt_type), "recommended_arrival": None,
+            "facilities": nearest_facilities(venue)}
     if st is None:
         return show
     start_dt = datetime.combine(_d(d), datetime.strptime(st, "%H:%M").time(), KST)
