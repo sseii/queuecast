@@ -31,7 +31,7 @@ export async function renderList(app, mode) {
       <h1>${t(`list.title.${mode}`)}</h1>
       <p>${t(`list.sub.${mode}`)}</p>
       <div class="intro-meta">
-        <span class="updated">${t("list.updated", { t: fmtGenerated(data.generated_at) })} · ${t("list.photos")}</span>
+        <span class="updated">${data.generated_at ? `${t("list.updated", { t: fmtGenerated(data.generated_at) })} · ` : ""}${t("list.photos")}</span>
         ${counts.map((c) => `<span class="count-pill"><i class="dot lv-dot-${c.lv}"></i>${levelName(c.lv)} ${c.n}</span>`).join("")}
       </div>
     </section>

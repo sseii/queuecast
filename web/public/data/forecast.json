@@ -99,7 +99,8 @@
           "distance_m": 40
         }
       ],
-      "expected_audience": 15000
+      "expected_audience": 15000,
+      "genre": "대중음악"
     },
     {
       "id": "EX-XMAS",
@@ -181,7 +182,8 @@
           "distance_m": 30
         }
       ],
-      "expected_audience": 2400
+      "expected_audience": 2400,
+      "genre": "복합"
     },
     {
       "id": "EX-BAND",
@@ -279,7 +281,8 @@
           "distance_m": 50
         }
       ],
-      "expected_audience": 5000
+      "expected_audience": 5000,
+      "genre": "대중음악"
     }
   ]
 }

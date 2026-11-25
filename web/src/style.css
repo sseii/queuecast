@@ -405,3 +405,14 @@ a.fac-tile:hover { background: var(--accent-soft); }
   .rung-name { font-size: 0.9rem; }
   .rung-today { font-size: 0.64rem; padding: 1px 5px; }
 }
+
+/* 긴 공연명: 티켓은 3줄, 큰 티켓은 4줄까지 */
+.ticket h3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.hero h1 { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+/* 휴대폰: 큰 티켓 높이를 글자에 맞춰 늘림 */
+@media (max-width: 640px) {
+  .hero { height: auto; min-height: 360px; }
+  .cell-main { display: flex; min-height: 360px; }
+  .hero-text { position: relative; inset: auto; margin-top: auto; }
+  .hero h1 { -webkit-line-clamp: 5; }
+}

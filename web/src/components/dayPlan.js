@@ -1,5 +1,5 @@
 // 공연 날을 기다리며: 카운트다운 · 그날의 타임라인 · 가방 챙기기 · 친구에게 보내기
-import { esc, round, PACK, themeOf, showTime, levelName, venueName } from "../util.js";
+import { esc, round, PACK, themeOf, genreOf, showTime, levelName, venueName } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { icon } from "./icons.js";
 
@@ -77,7 +77,9 @@ export function timeline(show) {
 // ── 가방 챙기기 (체크하면 이 브라우저에 저장) ──
 export function packList(show) {
   const theme = themeOf(show);
-  const items = [...(PACK[show.season] ?? []), ...(PACK[theme] ?? [])];
+  // 응원봉은 콘서트(대중음악)일 때만
+  const extra = theme === "christmas" ? PACK.christmas : genreOf(show) === "concert" ? PACK.concert : PACK.stage;
+  const items = [...(PACK[show.season] ?? []), ...extra];
   const saved = load(show.id);
   const done = items.filter((it) => saved.includes(it.id)).length;
   return `

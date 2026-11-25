@@ -101,6 +101,10 @@ export const PACK = {
     { id: "battery", ko: "보조배터리", en: "Power bank" },
     { id: "ticket", ko: "티켓·신분증", en: "Ticket & ID" },
   ],
+  stage: [
+    { id: "battery", ko: "보조배터리", en: "Power bank" },
+    { id: "ticket", ko: "티켓·신분증", en: "Ticket & ID" },
+  ],
   christmas: [
     { id: "redgreen", ko: "빨강·초록 포인트 아이템", en: "Something red or green" },
     { id: "battery", ko: "보조배터리", en: "Power bank" },
@@ -127,6 +131,16 @@ export function round(n) {
 export const THEMES = { concert: true, christmas: true }; // 이름·인사말은 i18n.js 의 theme.* / greet.*
 
 const XMAS = /크리스마스|성탄|홀리데이|캐롤|캐럴|산타|연말|파티|christmas|xmas|holiday|carol|party/i;
+
+// KOPIS 장르(genrenm) → 화면 표시용 장르 키. 대중음악이거나 장르가 없으면 "concert"
+const GENRES = [
+  ["뮤지컬", "musical"], ["연극", "play"], ["클래식", "classical"], ["국악", "korean"],
+  ["무용", "dance"], ["서커스", "circus"], ["마술", "circus"], ["복합", "mixed"], ["대중음악", "concert"],
+];
+export function genreOf(show) {
+  const g = show.genre ?? "";
+  return GENRES.find(([word]) => g.includes(word))?.[1] ?? "concert";
+}
 
 export function themeOf(show) {
   if (show.theme && THEMES[show.theme]) return show.theme;

@@ -1,5 +1,6 @@
 // 공연 티켓 (#7). 왼쪽은 공연 분위기 사진, 오른쪽 절취선 뒤 스텁에 체감온도
 import { esc, dateParts, mood, round, levelName, venueName, fmtPeople, themeOf, vtName, dday } from "../util.js";
+import { themeChips } from "./chips.js";
 import { t } from "../i18n.js";
 import { art } from "./art.js";
 import { photosFor, photoImg } from "../photos.js";
@@ -22,7 +23,7 @@ export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
       ${photoImg(photo, mini ? 500 : 800)}
       <div class="ticket-text">
         <div class="ticket-top">
-          <span class="theme-chip">${t(`theme.${theme}`)}</span>
+          ${themeChips(show, theme)}
           ${dd ? `<span class="dday">${dd}</span>` : ""}
         </div>
         <h3>${esc(show.title)}</h3>

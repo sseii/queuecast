@@ -13,6 +13,7 @@ import { icon } from "../components/icons.js";
 import { countdown, startCountdown, stopCountdown, timeline, packList, bindPack, shareButton, bindShare } from "../components/dayPlan.js";
 import { photosFor, photoImg } from "../photos.js";
 import { esc, dateParts, mood, round, fmtGenerated, fmtPeople, levelName, venueName, themeOf, vtName } from "../util.js";
+import { themeChips } from "../components/chips.js";
 import { t, lang } from "../i18n.js";
 
 export async function renderDetail(app, mode, id, view = "fan") {
@@ -48,7 +49,7 @@ export async function renderDetail(app, mode, id, view = "fan") {
             ${photoImg(p1, 1400)}
             <div class="hero-text">
               <div class="ticket-top">
-                <span class="theme-chip">${t(`theme.${theme}`)}</span>
+                ${themeChips(show, theme)}
                 ${show.foreign_audience ? `<span class="theme-chip">${t("hero.foreign")}</span>` : ""}
               </div>
               <h1>${esc(show.title)}</h1>
@@ -91,7 +92,7 @@ export async function renderDetail(app, mode, id, view = "fan") {
           : ""
       }
 
-      <p class="fine updated-foot">${t("foot", { t: fmtGenerated(data.generated_at), m: t(`foot.${mode}`) })}</p>
+      <p class="fine updated-foot">${data.generated_at ? t("foot", { t: fmtGenerated(data.generated_at), m: t(`foot.${mode}`) }) : t("list.photos")}</p>
     </div>
   `;
 
