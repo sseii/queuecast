@@ -163,6 +163,15 @@ class BuildTest(unittest.TestCase):
                                 ("2026-11-27", "B"), ("2026-11-28", "B")])
         self.assertIsNone(data["weather_base"])
 
+    def test_genre(self):
+        details = [{"id": "G", "title": "마술쇼", "genre": "서커스/마술", "venue": "우리금융아트홀",
+                    "from": "2026-11-28", "to": "2026-11-28", "time_guide": "토요일(15:00)"},
+                   {"id": "N", "venue": "기타", "from": "2026-11-28", "to": "2026-11-28", "time_guide": "토요일(18:00)"}]
+        now = datetime(2026, 11, 25, 5, 30, tzinfo=KST)
+        shows = forecast.build(details, {}, now, None)["shows"]
+        self.assertTrue(all("genre" in s for s in shows))
+        self.assertEqual([s["genre"] for s in shows], ["서커스/마술", None])   # 없으면 키는 두고 null
+
     def test_skip_no_show_day(self):
         details = [{"id": "W", "venue": "기타", "from": "2026-11-20", "to": "2026-12-31",
                     "time_guide": "토요일 ~ 일요일(15:00)"},

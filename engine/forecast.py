@@ -137,7 +137,8 @@ def build_show(detail, d, weather):
     venue = detail.get("venue") or "기타"
     audience = VENUE_AUDIENCE.get(venue)
     st = start_time(detail.get("time_guide"), d)
-    show = {"id": detail.get("id"), "title": detail.get("title"), "venue": venue, "date": d,
+    show = {"id": detail.get("id"), "title": detail.get("title"), "genre": detail.get("genre"),
+            "venue": venue, "date": d,
             "start_time": st, "day_type": dt_type, "foreign_audience": None,
             "wait_window": {"start": None, "end": None}, "season": season,
             "forecast_available": False, "expected_audience": audience, "exposed_people": None,

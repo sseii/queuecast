@@ -25,6 +25,7 @@
     {
       "id": "PF280001",
       "title": "DAY6 Special Concert: The Present",
+      "genre": "대중음악",
       "venue": "KSPO DOME",
       "date": "2026-12-20",
       "start_time": "18:00",
@@ -68,6 +69,7 @@
 | `shows[]` | 배열 | 올림픽공원 공연을 오늘~3일 뒤(D-3~당일) 공연일마다 하나씩. 날짜·시작 시각 순으로 정렬 |
 | `shows[].id` | 문자열 | KOPIS 공연 ID (mt20id) |
 | `title` | 문자열 | 공연명 |
+| `genre` | 문자열 또는 null | 공연 장르. KOPIS 장르명(`genrenm`) 그대로 (예: 대중음악, 뮤지컬, 서커스/마술) |
 | `venue` | 문자열 | 공연장. KSPO DOME / 올림픽홀 / 핸드볼경기장 / 우리금융아트홀 / 기타 |
 | `date`, `start_time` | 문자열 | `YYYY-MM-DD`, `HH:MM` (KOPIS 상세조회의 공연시간). 하루 여러 회차면 첫 회차. 공연시간 안내를 해석하지 못하면 `start_time`·`wait_window`·`risk` 값이 null |
 | `day_type` | `"weekday"` / `"weekend"` | 주말·공휴일이면 weekend |
