@@ -21,8 +21,9 @@ DAYS_AHEAD = 3
 WAIT_HOURS = {"weekend": 4, "weekday": 2}   # 야외 대기 시작: 공연 시작 몇 시간 전부터 (분석 결과)
 LATE_ARRIVAL_MIN = 90                       # caution 이상이면 공연 시작 90분 전 도착 권장
 
-# 2025 연계 공연관람객수 기준, 팀장 분석값으로 채운다
-VENUE_AUDIENCE = {"KSPO DOME": None, "올림픽홀": None, "핸드볼경기장": None, "우리금융아트홀": None, "기타": None}
+# 예정 공연은 실제 관객 수를 알 수 없어 공연장 객석 수를 쓴다 (docs/JSON_형식.md, 11/25 합의)
+VENUE_AUDIENCE = {"KSPO DOME": 15000, "핸드볼경기장": 6500, "올림픽홀": 3000, "우리금융아트홀": 1200, "기타": None}
+SCALE_LARGE, SCALE_MEDIUM = 10000, 5000     # 이상이면 large, medium, 그 아래 small
 
 # 공휴일 (대체공휴일 포함)
 HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08", "2027-02-09", "2027-03-01"}
@@ -100,6 +101,17 @@ def parsable(dtguidance):
     return False
 
 
+def scale(audience):
+    """예상 대기 규모: 1만 이상 large, 5천 이상 medium, 그 아래 small, 모르면 None."""
+    if audience is None:
+        return None
+    if audience >= SCALE_LARGE:
+        return "large"
+    if audience >= SCALE_MEDIUM:
+        return "medium"
+    return "small"
+
+
 def _hm(dt):
     return dt.strftime("%H:%M")
 
@@ -141,7 +153,8 @@ def build_show(detail, d, weather):
             "venue": venue, "date": d,
             "start_time": st, "day_type": dt_type, "foreign_audience": None,
             "wait_window": {"start": None, "end": None}, "season": season,
-            "forecast_available": False, "expected_audience": audience, "exposed_people": None,
+            "forecast_available": False, "expected_audience": audience, "scale": scale(audience),
+            "exposed_people": None,
             "risk": {"level": None, "peak_feel": None, "peak_time": None}, "hourly": [],
             "parking_full_eta": None, "recommended_arrival": None, "facilities": []}
     if st is None:

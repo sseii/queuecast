@@ -126,7 +126,29 @@ class ReplayTest(unittest.TestCase):
         self.assertEqual(s["season"], "winter")
         self.assertEqual(s["risk"]["level"], "caution")
         self.assertEqual(s["recommended_arrival"], "18:30")
-        self.assertEqual(s["exposed_people"], None)   # VENUE_AUDIENCE가 아직 비어 있음
+        self.assertEqual(s["expected_audience"], 3000)
+        self.assertEqual(s["scale"], "small")
+        self.assertEqual(s["exposed_people"], 3000)   # caution → 객석 수
+
+    def test_2025_07_26_kspo_audience(self):
+        weather, venue, _ = replay("2025-07-26")
+        s = build_one("2025-07-26", "토요일(18:00)", weather, venue)
+        self.assertEqual((s["expected_audience"], s["scale"], s["exposed_people"]), (15000, "large", 15000))
+
+
+class ScaleTest(unittest.TestCase):
+    def test_boundaries(self):
+        self.assertEqual(forecast.scale(4999), "small")
+        self.assertEqual(forecast.scale(5000), "medium")
+        self.assertEqual(forecast.scale(9999), "medium")
+        self.assertEqual(forecast.scale(10000), "large")
+        self.assertIsNone(forecast.scale(None))
+
+    def test_venue_table(self):
+        self.assertEqual(forecast.VENUE_AUDIENCE["핸드볼경기장"], 6500)
+        self.assertEqual(forecast.scale(forecast.VENUE_AUDIENCE["핸드볼경기장"]), "medium")
+        self.assertEqual(forecast.scale(forecast.VENUE_AUDIENCE["우리금융아트홀"]), "small")
+        self.assertIsNone(forecast.VENUE_AUDIENCE["기타"])
 
 
 class BuildTest(unittest.TestCase):
