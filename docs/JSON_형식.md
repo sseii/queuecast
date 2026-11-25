@@ -18,12 +18,14 @@
 ```json
 {
   "generated_at": "2026-11-24T05:30:00+09:00",
+  "weather_base": "2026-11-24T05:00:00+09:00",
   "weather_source": "기상청 단기예보 (격자 nx=62, ny=126 송파구)",
   "show_source": "KOPIS 공연목록",
   "shows": [
     {
       "id": "PF280001",
       "title": "DAY6 Special Concert: The Present",
+      "genre": "대중음악",
       "venue": "KSPO DOME",
       "date": "2026-12-20",
       "start_time": "18:00",
@@ -31,6 +33,9 @@
       "foreign_audience": true,
       "wait_window": { "start": "14:00", "end": "18:00" },
       "season": "winter",
+      "forecast_available": true,
+      "expected_audience": 15000,
+      "exposed_people": 15000,
       "risk": {
         "level": "caution",
         "peak_feel": -11.2,
@@ -60,19 +65,25 @@
 | 필드 | 타입 | 설명 |
 |---|---|---|
 | `generated_at` | 문자열 (ISO 시각) | 엔진이 파일을 만든 시각. 웹 상단에 "○시 기준"으로 표시 |
+| `weather_base` | 문자열 (ISO 시각, +09:00) 또는 null | 사용한 기상청 단기예보 발표 시각. 예보를 못 받았으면 null |
+| `shows[]` | 배열 | 올림픽공원 공연을 오늘~3일 뒤(D-3~당일) 공연일마다 하나씩. 날짜·시작 시각 순으로 정렬 |
 | `shows[].id` | 문자열 | KOPIS 공연 ID (mt20id) |
 | `title` | 문자열 | 공연명 |
+| `genre` | 문자열 또는 null | 공연 장르. KOPIS 장르명(`genrenm`) 그대로 (예: 대중음악, 뮤지컬, 서커스/마술) |
 | `venue` | 문자열 | 공연장. KSPO DOME / 올림픽홀 / 핸드볼경기장 / 우리금융아트홀 / 기타 |
-| `date`, `start_time` | 문자열 | `YYYY-MM-DD`, `HH:MM` (KOPIS 상세조회의 공연시간) |
+| `date`, `start_time` | 문자열 | `YYYY-MM-DD`, `HH:MM` (KOPIS 상세조회의 공연시간). 하루 여러 회차면 첫 회차. 공연시간 안내를 해석하지 못하면 `start_time`·`wait_window`·`risk` 값이 null |
 | `day_type` | `"weekday"` / `"weekend"` | 주말·공휴일이면 weekend |
 | `foreign_audience` | 불리언 | 영문 공연정보(해외 예매처)에 같은 공연이 있으면 true → 웹에서 영문 안내를 먼저 보여줌 |
 | `wait_window` | 객체 | 야외 대기 시간대. 주말은 시작 4시간 전부터, 평일은 시작 2시간 전부터 시작 시각까지 (분석 결과 기준, 엔진 상수로 둠) |
 | `season` | `"summer"` / `"winter"` | 5~9월 summer, 그 외 winter |
+| `forecast_available` | 불리언 | 대기 시간대에 예보 값이 하나라도 있으면 true. false면 `risk` 값은 null, `hourly`는 `[]` |
+| `expected_audience` | 정수 또는 null | 공연장별 예상 관객 수. 엔진 상수표 `VENUE_AUDIENCE`에서 가져온다 |
+| `exposed_people` | 정수 또는 null | 예상 노출 인원. `risk.level`이 caution 이상이면 `expected_audience`, safe면 0, 모르면 null |
 | `risk.level` | 단계 코드 | 대기 시간대 중 가장 위험한 시각의 단계 |
 | `risk.peak_feel`, `peak_time` | 숫자, 문자열 | 가장 위험한 시각의 체감온도(℃)와 그 시각 |
 | `hourly[]` | 배열 | 대기 시간대의 시간별 값. `temp` 기온(℃), `humidity` 습도(%), `wind` 풍속(m/s), `feel` 체감온도(℃), `level` 그 시각의 단계 |
 | `parking_full_eta` | 문자열 또는 null | 만차 예상 시각 (혼잡도·연계 데이터 기반, 계산 불가면 null) |
-| `recommended_arrival` | 문자열 | 권장 도착 시각. 위험 단계가 caution 이상이면 입장 시작 직전으로 늦춤 |
+| `recommended_arrival` | 문자열 | 권장 도착 시각. safe면 대기 시작 시각, caution 이상이면 공연 시작 90분 전 |
 | `facilities[]` | 배열 | 공연장에서 가까운 음수대·화장실·자판기 최대 3개씩 (편의시설 정보, 직선거리) |
 
 ### 단계 코드 (`level`)
