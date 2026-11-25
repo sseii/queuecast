@@ -24,6 +24,7 @@ LATE_ARRIVAL_MIN = 90                       # caution 이상이면 공연 시작
 # 예정 공연은 실제 관객 수를 알 수 없어 공연장 객석 수를 쓴다 (docs/JSON_형식.md, 11/25 합의)
 VENUE_AUDIENCE = {"KSPO DOME": 15000, "핸드볼경기장": 6500, "올림픽홀": 3000, "우리금융아트홀": 1200, "기타": None}
 SCALE_LARGE, SCALE_MEDIUM = 10000, 5000     # 이상이면 large, medium, 그 아래 small
+MAX_FILL_GAP_H = 6                          # 보간할 때 앞뒤 값을 찾는 최대 거리 (단기예보 4일째는 3시간 간격)
 
 # 공휴일 (대체공휴일 포함)
 HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08", "2027-02-09", "2027-03-01"}
@@ -117,20 +118,55 @@ def _hm(dt):
 
 
 def _hourly(start_dt, wait_dt, season, weather):
-    """대기 시작 정시 ~ 공연 시작 정시, 단기예보에 있는 시각만."""
-    rows = []
+    """대기 시작 정시 ~ 공연 시작 정시. 빈 정시는 앞뒤 값으로 선형 보간(filled=true).
+    (행 목록, 못 채운 시각 수)를 돌려준다."""
+    rows, missing = [], 0
     t = wait_dt.replace(minute=0)
     end = start_dt.replace(minute=0)
     while t <= end:
-        v = (weather.get(t.date().isoformat()) or {}).get(_hm(t))
-        if v is not None:
+        v, filled = _slot(weather, t), False
+        if v is None or v.get("temp") is None:
+            v = _interpolate(weather, t)
+            filled = v is not None
+        if v is None:
+            missing += 1
+        else:
             f = feel.feel(v.get("temp"), v.get("humidity"), v.get("wind"), season)
+            if f is None:
+                missing += 1
             hum = v.get("humidity")
             rows.append({"time": _hm(t), "temp": v.get("temp"),
                          "humidity": int(round(hum)) if hum is not None else None,
-                         "wind": v.get("wind"), "feel": f, "level": feel.level(f, season)})
+                         "wind": v.get("wind"), "feel": f, "level": feel.level(f, season), "filled": filled})
         t += timedelta(hours=1)
-    return rows
+    return rows, missing
+
+
+def _slot(weather, t):
+    return (weather.get(t.date().isoformat()) or {}).get(_hm(t))
+
+
+def _neighbor(weather, t, step):
+    """t에서 step(+1/-1)시간 방향으로 기온이 있는 가장 가까운 정시 (거리, 값)."""
+    for k in range(1, MAX_FILL_GAP_H + 1):
+        v = _slot(weather, t + timedelta(hours=step * k))
+        if v is not None and v.get("temp") is not None:
+            return k, v
+    return None
+
+
+def _interpolate(weather, t):
+    """앞뒤 값이 둘 다 있을 때만 temp·humidity·wind를 선형 보간. 못 채우면 None."""
+    before, after = _neighbor(weather, t, -1), _neighbor(weather, t, +1)
+    if before is None or after is None:
+        return None
+    (a, pv), (b, nv) = before, after
+    w = a / (a + b)
+    out = {}
+    for k in ("temp", "humidity", "wind"):
+        x, y = pv.get(k), nv.get(k)
+        out[k] = round(x + (y - x) * w, 1) if x is not None and y is not None else None
+    return out
 
 
 def _risk(hourly, season):
@@ -153,7 +189,8 @@ def build_show(detail, d, weather):
             "venue": venue, "date": d,
             "start_time": st, "day_type": dt_type, "foreign_audience": None,
             "wait_window": {"start": None, "end": None}, "season": season,
-            "forecast_available": False, "expected_audience": audience, "scale": scale(audience),
+            "forecast_available": False, "data_status": "partial",
+            "expected_audience": audience, "scale": scale(audience),
             "exposed_people": None,
             "risk": {"level": None, "peak_feel": None, "peak_time": None}, "hourly": [],
             "parking_full_eta": None, "recommended_arrival": None, "facilities": []}
@@ -162,7 +199,8 @@ def build_show(detail, d, weather):
     start_dt = datetime.combine(_d(d), datetime.strptime(st, "%H:%M").time(), KST)
     wait_dt = start_dt - timedelta(hours=WAIT_HOURS[dt_type])
     show["wait_window"] = {"start": _hm(wait_dt), "end": st}
-    hourly = _hourly(start_dt, wait_dt, season, weather)
+    hourly, missing = _hourly(start_dt, wait_dt, season, weather)
+    show["data_status"] = "partial" if missing else "ok"
     if not any(h["feel"] is not None for h in hourly):
         return show
     risk = _risk(hourly, season)

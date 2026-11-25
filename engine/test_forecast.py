@@ -151,6 +151,44 @@ class ScaleTest(unittest.TestCase):
         self.assertIsNone(forecast.VENUE_AUDIENCE["기타"])
 
 
+def w(temp, hum=50.0, wind=2.0):
+    return {"temp": temp, "humidity": hum, "wind": wind}
+
+
+class FillTest(unittest.TestCase):
+    DAY = "2026-11-29"            # 일요일, "일요일(17:00)" → 대기 13:00~17:00
+    NOW = datetime(2026, 11, 26, 5, 30, tzinfo=KST)
+
+    def show(self, hours):
+        detail = {"id": "F", "venue": "KSPO DOME", "from": self.DAY, "to": self.DAY, "time_guide": "일요일(17:00)"}
+        return forecast.build([detail], {self.DAY: hours}, self.NOW, None)["shows"][0]
+
+    def test_interpolate_3_hourly(self):
+        s = self.show({"12:00": w(3.0, 40.0, 1.0), "15:00": w(6.0, 70.0, 4.0), "18:00": w(0.0, 70.0, 4.0)})
+        self.assertEqual([h["time"] for h in s["hourly"]], ["13:00", "14:00", "15:00", "16:00", "17:00"])
+        self.assertEqual([h["filled"] for h in s["hourly"]], [True, True, False, True, True])
+        h13 = s["hourly"][0]
+        self.assertEqual((h13["temp"], h13["humidity"], h13["wind"]), (4.0, 50, 2.0))
+        self.assertEqual(s["hourly"][4]["temp"], 2.0)                         # 15시 6℃ → 18시 0℃의 2/3
+        self.assertEqual(h13["feel"], feel.feel(4.0, 50.0, 2.0, "winter"))   # 채운 값으로 체감 계산
+        self.assertEqual(s["data_status"], "ok")
+        self.assertTrue(s["forecast_available"])
+
+    def test_partial_when_no_after_value(self):
+        s = self.show({"12:00": w(3.0), "15:00": w(6.0)})
+        self.assertEqual([h["time"] for h in s["hourly"]], ["13:00", "14:00", "15:00"])
+        self.assertEqual(s["data_status"], "partial")
+
+    def test_ok_when_full(self):
+        s = self.show({f"{h:02d}:00": w(5.0) for h in range(13, 18)})
+        self.assertEqual(s["data_status"], "ok")
+        self.assertFalse(any(h["filled"] for h in s["hourly"]))
+
+    def test_partial_when_no_start_time(self):
+        s = build_one("2026-12-05", "추후 공지", {}, "올림픽공원 (올림픽홀)")
+        self.assertEqual(s["data_status"], "partial")
+
+
 class BuildTest(unittest.TestCase):
     def test_no_weather(self):
         s = build_one("2026-12-05", GUIDE, {}, "올림픽공원 (올림픽홀)")
