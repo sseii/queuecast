@@ -1,19 +1,17 @@
 // 공연 날을 기다리며: 카운트다운 · 그날의 타임라인 · 가방 챙기기 · 친구에게 보내기
-import { esc, round, PACK, themeOf, showTime, LEVELS } from "../util.js";
+import { esc, round, PACK, themeOf, showTime, levelName, venueName } from "../util.js";
+import { t, lang } from "../i18n.js";
 import { icon } from "./icons.js";
 
 // ── 카운트다운 ──
 export function countdown(show, mode) {
   if (mode === "replay") {
-    return `<div class="countdown is-past"><span>지난 공연을 다시 돌려 본 예보예요</span></div>`;
+    return `<div class="countdown is-past"><span>${t("cd.past")}</span></div>`;
   }
+  const unit = (u) => `<span class="cd-num" data-unit="${u}">-</span><span class="cd-unit">${t(`cd.${u}`)}</span>`;
   return `
   <div class="countdown" data-countdown="${showTime(show).getTime()}">
-    <span class="cd-label">공연까지</span>
-    <span class="cd-num" data-unit="d">-</span><span class="cd-unit">일</span>
-    <span class="cd-num" data-unit="h">-</span><span class="cd-unit">시간</span>
-    <span class="cd-num" data-unit="m">-</span><span class="cd-unit">분</span>
-    <span class="cd-num" data-unit="s">-</span><span class="cd-unit">초</span>
+    <span class="cd-label">${t("cd.until")}</span>${unit("d")}${unit("h")}${unit("m")}${unit("s")}
   </div>`;
 }
 
@@ -24,9 +22,9 @@ export function startCountdown(root) {
   if (!box) return;
   const target = Number(box.dataset.countdown);
   const tick = () => {
-    let left = Math.max(0, Math.floor((target - Date.now()) / 1000));
+    const left = Math.max(0, Math.floor((target - Date.now()) / 1000));
     if (left === 0) {
-      box.innerHTML = `<span class="cd-label">지금 공연 중이거나 끝났어요</span>`;
+      box.innerHTML = `<span class="cd-label">${t("cd.now")}</span>`;
       clearInterval(timer);
       return;
     }
@@ -46,15 +44,17 @@ export function stopCountdown() {
 // ── 그날의 타임라인 ──
 export function timeline(show) {
   const level = show.risk?.level ?? "safe";
-  const extreme = show.season === "summer" ? "가장 더운 시간" : "가장 추운 시간";
   const events = [
-    show.wait_window?.start && { t: show.wait_window.start, ic: "queue", title: "야외 대기 시작", sub: "MD·입장 줄이 생기는 시간" },
-    show.parking_full_eta && { t: show.parking_full_eta, ic: "parking", title: "주차장 만차 예상", sub: "이후엔 대중교통이 편해요" },
+    show.wait_window?.start && { t: show.wait_window.start, ic: "queue", title: t("tl.queue"), sub: t("tl.queue.sub") },
+    show.parking_full_eta && { t: show.parking_full_eta, ic: "parking", title: t("tl.parking"), sub: t("tl.parking.sub") },
     show.risk?.peak_time && level !== "safe" && {
-      t: show.risk.peak_time, ic: "thermo", title: extreme, sub: `체감 ${round(show.risk.peak_feel)}° · ${LEVELS[level].ko}`, cls: `is-risk lv-${level}`,
+      t: show.risk.peak_time, ic: "thermo",
+      title: t(show.season === "summer" ? "tl.hot" : "tl.cold"),
+      sub: t("tl.risk.sub", { f: round(show.risk.peak_feel), l: levelName(level) }),
+      cls: `is-risk lv-${level}`,
     },
-    show.recommended_arrival && { t: show.recommended_arrival, ic: "walk", title: "이때 도착하면 딱 좋아요", sub: "추천 도착 시간", cls: "is-pick" },
-    show.start_time && { t: show.start_time, ic: "spark", title: "공연 시작", sub: esc(show.venue), cls: "is-show" },
+    show.recommended_arrival && { t: show.recommended_arrival, ic: "walk", title: t("tl.arrive"), sub: t("tl.arrive.sub"), cls: "is-pick" },
+    show.start_time && { t: show.start_time, ic: "spark", title: t("tl.show"), sub: esc(venueName(show.venue)), cls: "is-show" },
   ]
     .filter(Boolean)
     .sort((a, b) => a.t.localeCompare(b.t));
@@ -81,9 +81,9 @@ export function packList(show) {
   const saved = load(show.id);
   const done = items.filter((it) => saved.includes(it.id)).length;
   return `
-  <div class="pack" data-pack="${esc(show.id)}">
-    <div class="pack-progress">
-      <span class="pack-count"><b data-pack-done>${done}</b> / ${items.length}개 챙겼어요</span>
+  <div class="pack ${done === items.length ? "is-complete" : ""}" data-pack="${esc(show.id)}">
+    <div class="pack-progress" data-done-label="${t("pack.done")}">
+      <span class="pack-count">${t("pack.count", { d: done, n: items.length })}</span>
       <span class="pack-bar"><i style="width:${(done / items.length) * 100}%"></i></span>
     </div>
     <ul class="pack-list">
@@ -92,7 +92,7 @@ export function packList(show) {
           (it) => `
         <li><label class="pack-item">
           <input type="checkbox" value="${it.id}" ${saved.includes(it.id) ? "checked" : ""} />
-          <span class="pack-check">${icon.check(14)}</span>${it.ko}
+          <span class="pack-check">${icon.check(14)}</span>${it[lang()]}
         </label></li>`
         )
         .join("")}
@@ -104,7 +104,7 @@ export function bindPack(root) {
   const box = root.querySelector("[data-pack]");
   if (!box) return;
   const id = box.dataset.pack;
-  const update = () => {
+  box.addEventListener("change", () => {
     const checked = [...box.querySelectorAll("input:checked")].map((i) => i.value);
     const total = box.querySelectorAll("input").length;
     box.querySelector("[data-pack-done]").textContent = checked.length;
@@ -113,9 +113,7 @@ export function bindPack(root) {
     try {
       localStorage.setItem(`qc-pack-${id}`, JSON.stringify(checked));
     } catch {}
-  };
-  box.addEventListener("change", update);
-  box.classList.toggle("is-complete", box.querySelectorAll("input:checked").length === box.querySelectorAll("input").length);
+  });
 }
 
 function load(id) {
@@ -128,13 +126,16 @@ function load(id) {
 
 // ── 친구에게 보내기 ──
 export function shareButton() {
-  return `<button type="button" class="share-btn" data-share>${icon.share(18)}<span>같이 가는 친구에게 보내기</span></button>`;
+  return `<button type="button" class="share-btn" data-share>${icon.share(18)}<span>${t("share")}</span></button>`;
 }
 
 export function bindShare(root, show) {
   const btn = root.querySelector("[data-share]");
   if (!btn) return;
-  const text = `${show.title} (${show.date} ${show.start_time})\n줄 서는 시간 체감 ${round(show.risk?.peak_feel)}°, ${show.recommended_arrival ?? ""} 이후 도착 추천! 큐캐스트에서 준비물 확인해 봐`;
+  const text = t("share.text", {
+    title: show.title, date: show.date, time: show.start_time,
+    feel: round(show.risk?.peak_feel), arr: show.recommended_arrival ?? "-",
+  });
   btn.addEventListener("click", async () => {
     try {
       if (navigator.share) {
@@ -142,7 +143,7 @@ export function bindShare(root, show) {
         return;
       }
       await navigator.clipboard.writeText(`${text}\n${location.href}`);
-      btn.querySelector("span").textContent = "링크를 복사했어요";
+      btn.querySelector("span").textContent = t("share.copied");
     } catch {
       /* 공유 창을 닫은 경우 */
     }

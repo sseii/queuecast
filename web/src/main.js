@@ -9,6 +9,7 @@ import "./style.css";
 import { renderList } from "./pages/list.js";
 import { renderDetail } from "./pages/detail.js";
 import { loadShows, loadActions } from "./data.js";
+import { t, lang, setLang } from "./i18n.js";
 
 const app = document.getElementById("app");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -20,28 +21,50 @@ function parse() {
   return { mode, id: id ? decodeURIComponent(id) : null };
 }
 
+// 머리·꼬리 글자 (언어 바뀔 때마다)
+function renderChrome(mode) {
+  document.documentElement.lang = lang();
+  document.querySelector(".logo strong").textContent = lang() === "en" ? "QueueCast" : "큐캐스트";
+  document.querySelectorAll(".mode-tabs a").forEach((a) => {
+    a.textContent = t(`nav.${a.dataset.mode}`);
+    a.classList.toggle("active", a.dataset.mode === mode);
+  });
+  document.querySelector("[data-lang-toggle]").textContent = t("nav.lang");
+  document.getElementById("credit").textContent = t("footer");
+  document.title = lang() === "en" ? "QueueCast" : "큐캐스트 QueueCast";
+}
+
 async function render() {
   const { mode, id } = parse();
-  document.querySelectorAll(".mode-tabs a").forEach((a) => a.classList.toggle("active", a.dataset.mode === mode));
-  document.title = "큐캐스트 QueueCast";
+  renderChrome(mode);
   if (id) await renderDetail(app, mode, id);
   else await renderList(app, mode);
 }
 
-async function route() {
+async function route({ keepScroll = false } = {}) {
   const { mode } = parse();
   // 데이터를 먼저 받아 두면 전환 중에 빈 화면이 보이지 않는다
   await Promise.all([loadShows(mode), loadActions()]);
+  const y = window.scrollY;
+  const done = () => window.scrollTo(0, keepScroll ? y : 0);
   if (document.startViewTransition && !reduceMotion && app.childElementCount) {
     document.startViewTransition(async () => {
       await render();
-      window.scrollTo(0, 0);
+      done();
     });
   } else {
     await render();
-    window.scrollTo(0, 0);
+    done();
   }
 }
 
-window.addEventListener("hashchange", route);
+// 언어 바꾸기: 오른쪽 위 버튼, 또는 화면 안의 "View in English" 버튼
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-lang-toggle], [data-set-lang]");
+  if (!btn) return;
+  setLang(btn.dataset.setLang ?? (lang() === "en" ? "ko" : "en"));
+  route({ keepScroll: true });
+});
+
+window.addEventListener("hashchange", () => route());
 route();

@@ -1,5 +1,10 @@
 // 관객 안내(한·영)와 공단·주최사 대응 체크리스트 (#8)
-import { fillTemplate } from "../util.js";
+//  - 관객 안내: actions.json [계절][단계].audience + 가장 가까운 실내 쉼터
+//  - 대응 체크리스트: actions.json [계절][단계].org + 관객 규모 추가 조치(actions.json scale)
+import { esc, fillTemplate, fmtPeople } from "../util.js";
+import { t, lang } from "../i18n.js";
+import { nearest, fmtDist, mapUrl } from "./facilities.js";
+import { icon } from "./icons.js";
 
 function entry(actions, show) {
   return actions?.[show.season]?.[show.risk?.level] ?? null;
@@ -9,54 +14,86 @@ export function audienceCard(actions, show) {
   const level = show.risk?.level ?? "safe";
   const e = entry(actions, show);
   const safe = level === "safe" || !e;
-  // 해외 관객이 많은 공연은 영어 안내를 먼저 보여준다
-  const order = show.foreign_audience ? ["en", "ko"] : ["ko", "en"];
+  // 영어 화면이거나 해외 팬이 많은 공연이면 영어 안내를 먼저
+  const order = lang() === "en" || show.foreign_audience ? ["en", "ko"] : ["ko", "en"];
   const tabLabel = { ko: "한국어", en: "English" };
+  const [shelter] = nearest(show, "실내 쉼터");
 
-  const body = (lang) => {
-    if (safe) {
-      return `<p class="notice-text">${lang === "en" ? "No special notice. Enjoy the show!" : "특별히 조심할 건 없어요. 즐거운 관람 되세요!"}</p>`;
-    }
-    return `
-      <p class="notice-text">${fillTemplate(e.audience[lang], show, lang)}</p>
-      <button type="button" class="text-btn" data-copy="${lang}">${lang === "en" ? "Copy message" : "안내 문구 복사"}</button>`;
-  };
+  const body = (l) => `
+      <p class="notice-text">${safe ? t("aud.safe", {}, l) : fillTemplate(e.audience[l], show, l)}</p>
+      ${!safe && shelter ? shelterBox(shelter, show, l) : ""}
+      ${safe ? "" : `<button type="button" class="text-btn" data-copy="${l}">${t("aud.copy", {}, l)}</button>`}`;
 
   return `
   <section class="block audience" data-tabs>
     <div class="block-head">
-      <h2>${show.foreign_audience ? "Notice for fans" : "관객 안내"}</h2>
-      <div class="seg" role="tablist" aria-label="언어">
+      <h2>${t("aud.title")}</h2>
+      <div class="seg" role="tablist">
         ${order
-          .map((lang, i) => `<button type="button" role="tab" data-lang="${lang}" aria-selected="${i === 0}">${tabLabel[lang]}</button>`)
+          .map((l, i) => `<button type="button" role="tab" data-lang="${l}" aria-selected="${i === 0}">${tabLabel[l]}</button>`)
           .join("")}
       </div>
     </div>
     ${order
-      .map((lang, i) => `<div class="lang-body" data-lang-body="${lang}" lang="${lang}" ${i === 0 ? "" : "hidden"}>${body(lang)}</div>`)
+      .map((l, i) => `<div class="lang-body" data-lang-body="${l}" lang="${l}" ${i === 0 ? "" : "hidden"}>${body(l)}</div>`)
       .join("")}
   </section>`;
+}
+
+function shelterBox(f, show, l) {
+  const url = mapUrl(f);
+  const go = t(show.season === "summer" ? "aud.shelter.go.summer" : "aud.shelter.go", {}, l);
+  const inner = `
+    <span class="shelter-icon">${icon.shelter(22)}</span>
+    <span class="shelter-text"><small>${t("aud.shelter", {}, l)} · ${fmtDist(f.distance_m)}</small>
+      <b>${esc(f.place)} ${esc(f.detail ?? "")}</b><small>${go}</small></span>`;
+  return url
+    ? `<a class="shelter" href="${url}" target="_blank" rel="noopener">${inner}</a>`
+    : `<div class="shelter">${inner}</div>`;
+}
+
+// 관객 규모 구간: actions.json 의 scale 중 min 이하인 것 가운데 가장 큰 구간
+export function scaleTier(actions, show) {
+  const n = show.expected_audience;
+  if (n == null || !actions?.scale) return null;
+  return Object.values(actions.scale)
+    .filter((s) => n >= s.min_audience)
+    .sort((a, b) => b.min_audience - a.min_audience)[0] ?? null;
 }
 
 export function orgCard(actions, show) {
   const level = show.risk?.level ?? "safe";
   const e = entry(actions, show);
-  if (level === "safe" || !e) {
+  const tier = level === "safe" ? null : scaleTier(actions, show);
+  const base = level === "safe" || !e ? [] : e.org;
+
+  if (!base.length) {
     return `
     <section class="block org">
-      <h2>공단·주최사 대응</h2>
-      <p class="fine">이 공연은 따로 준비할 조치가 없어요.</p>
+      <h2>${t("org.title")}</h2>
+      <p class="fine">${t("org.none")}</p>
     </section>`;
   }
+  const list = (items, prefix) =>
+    items
+      .map((txt, i) => `<li><input type="checkbox" id="${prefix}-${i}" /><label for="${prefix}-${i}">${fillTemplate(txt, show, "ko")}</label></li>`)
+      .join("");
+
   return `
   <details class="block org" open>
-    <summary><h2>공단·주최사 대응 체크리스트</h2><span class="org-count">${e.org.length}개</span></summary>
-    <ul class="checklist">
-      ${e.org
-        .map((t, i) => `<li><input type="checkbox" id="org-${i}" /><label for="org-${i}">${fillTemplate(t, show)}</label></li>`)
-        .join("")}
-    </ul>
-    <p class="fine">현장 점검용 체크예요. 새로고침하면 지워져요.</p>
+    <summary><h2>${t("org.title")}</h2><span class="org-count">${t("org.count", { n: base.length + (tier?.org.length ?? 0) })}</span></summary>
+    ${lang() === "en" ? `<p class="fine">${t("org.ko")}</p>` : ""}
+    <ul class="checklist">${list(base, "org")}</ul>
+    ${
+      tier
+        ? `<div class="scale">
+            <h3>${t("org.scale")}</h3>
+            <p class="fine">${t("org.scale.sub", { n: fmtPeople(show.expected_audience), s: esc(tier.label) })}</p>
+            <ul class="checklist">${list(tier.org, "scale")}</ul>
+          </div>`
+        : ""
+    }
+    <p class="fine">${t("org.note")}</p>
   </details>`;
 }
 
@@ -73,13 +110,13 @@ export function bindAudience(root) {
     });
     box.querySelectorAll("[data-copy]").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        const lang = btn.dataset.copy;
-        const text = box.querySelector(`[data-lang-body="${lang}"] .notice-text`).textContent;
+        const l = btn.dataset.copy;
+        const text = box.querySelector(`[data-lang-body="${l}"] .notice-text`).textContent;
         try {
           await navigator.clipboard.writeText(text);
-          btn.textContent = lang === "en" ? "Copied" : "복사했어요";
+          btn.textContent = t("aud.copied", {}, l);
         } catch {
-          btn.textContent = lang === "en" ? "Couldn't copy" : "복사하지 못했어요";
+          btn.textContent = t("aud.copyfail", {}, l);
         }
       });
     });

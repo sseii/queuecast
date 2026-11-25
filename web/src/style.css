@@ -34,7 +34,8 @@ h1, h2, h3, p { margin: 0; }
 
 /* 헤더 */
 .site-header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(12px); }
-.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 68px; }
+.header-inner { display: flex; align-items: center; gap: 10px; height: 68px; }
+.logo { margin-right: auto; }
 .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.03em; }
 .logo-mark { color: var(--accent); }
 .mode-tabs { display: flex; gap: 2px; background: var(--tile); padding: 4px; border-radius: 999px; }
@@ -300,7 +301,7 @@ a.fac-tile:hover { background: var(--accent-soft); }
 .pack-count b { color: var(--ink); font-size: 1.1rem; }
 .pack-bar { flex: 1; height: 8px; background: var(--tile); border-radius: 999px; overflow: hidden; }
 .pack-bar i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s; }
-.pack.is-complete .pack-count::after { content: " · 준비 끝!"; color: var(--accent); font-weight: 800; }
+.pack.is-complete .pack-progress::after { content: attr(data-done-label); color: var(--accent); font-weight: 800; font-size: 0.88rem; white-space: nowrap; }
 .pack-list { list-style: none; padding: 0; margin: 0 0 12px; display: flex; flex-wrap: wrap; gap: 8px; }
 .pack-item { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px 9px 10px; border-radius: 999px; background: var(--tile); font-size: 0.9rem; font-weight: 700; cursor: pointer; user-select: none; }
 .pack-item input { position: absolute; opacity: 0; pointer-events: none; }
@@ -324,4 +325,32 @@ a.fac-tile:hover { background: var(--accent-soft); }
   .cd-num { font-size: 1.5rem; }
   .plan-grid { grid-template-columns: 1fr; gap: 0; }
   .hero-text { padding: 20px; }
+}
+
+/* 언어 */
+.lang-toggle { border: 1.5px solid var(--tile); background: var(--paper); color: var(--ink); font: inherit; font-size: 0.85rem; font-weight: 700; padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.lang-toggle:hover { border-color: var(--ink); }
+.lang-hint { display: flex; align-items: center; gap: 8px; width: 100%; margin: -4px 0 14px; border: 0; cursor: pointer; font: inherit; font-size: 0.9rem; font-weight: 700;
+  color: var(--accent); background: var(--accent-soft); border-radius: 16px; padding: 12px 16px; text-align: left; }
+.people { display: block; font-size: 0.8rem; font-weight: 600; opacity: 0.85; margin-top: 2px; }
+
+/* 실내 쉼터 */
+.shelter { display: flex; align-items: center; gap: 12px; text-decoration: none; background: var(--accent-soft); border-radius: 16px; padding: 12px 16px; margin: 4px 0 6px; max-width: 520px; }
+.shelter-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent); color: #fff; flex: none; }
+.shelter-text { display: flex; flex-direction: column; line-height: 1.4; }
+.shelter-text small { font-size: 0.78rem; color: var(--sub); }
+.shelter-text b { font-size: 0.95rem; }
+
+/* 관객 규모 추가 조치 */
+.scale { margin-top: 10px; padding: 14px 16px 6px; background: var(--tile); border-radius: 16px; }
+.scale h3 { font-size: 0.95rem; font-weight: 800; }
+.scale .checklist { margin-top: 6px; }
+.scale .checklist li { border-top-color: var(--paper); }
+
+.fac-grid.fac-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 860px) { .fac-grid.fac-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .fac-grid.fac-4 { grid-template-columns: 1fr; }
+  .lang-toggle { padding: 6px 10px; font-size: 0.78rem; }
+  .logo strong { display: none; }
 }

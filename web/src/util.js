@@ -1,4 +1,5 @@
 // 공통 상수·도우미 함수
+import { t, lang } from "./i18n.js";
 
 // 단계 코드 → 표시 정보 (docs/JSON_형식.md 단계 표 기준)
 export const LEVELS = {
@@ -21,17 +22,42 @@ export function fmtFeel(n) {
 const WEEK_KO = ["일", "월", "화", "수", "목", "금", "토"];
 const WEEK_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-// ISO 시각 → "11월 24일 05:30"
+const MON_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// ISO 시각 → "11월 24일 05:30" / "Nov 24, 05:30"
 export function fmtGenerated(iso) {
   if (!iso) return "-";
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!m) return iso;
-  return `${Number(m[2])}월 ${Number(m[3])}일 ${m[4]}:${m[5]}`;
+  return lang() === "en"
+    ? `${MON_EN[Number(m[2]) - 1]} ${Number(m[3])}, ${m[4]}:${m[5]}`
+    : `${Number(m[2])}월 ${Number(m[3])}일 ${m[4]}:${m[5]}`;
+}
+
+// 공연장 영문 이름 (영어 화면용)
+const VENUES_EN = {
+  "KSPO DOME": "KSPO DOME",
+  올림픽홀: "Olympic Hall",
+  핸드볼경기장: "Handball Arena",
+  우리금융아트홀: "Woori Financial Art Hall",
+  기타: "Olympic Park",
+};
+export function venueName(v) {
+  return lang() === "en" ? VENUES_EN[v] ?? v : v;
+}
+
+export function levelName(level) {
+  return LEVELS[level]?.[lang()] ?? "";
+}
+
+// 예상 관객 수 15000 → "15,000"
+export function fmtPeople(n) {
+  return n == null ? null : Number(n).toLocaleString("en-US");
 }
 
 // actions.json 문구의 {peak_feel} 등을 forecast 값으로 바꾼다.
 // 값이 null 이면: 괄호 안에 있으면 괄호째 지우고, 아니면 "정보 없음"/"N/A".
-export function fillTemplate(text, show, lang = "ko") {
+export function fillTemplate(text, show, l = lang()) {
   const values = {
     peak_feel: show.risk?.peak_feel != null ? Number(show.risk.peak_feel).toFixed(1) : null,
     recommended_arrival: show.recommended_arrival,
@@ -43,7 +69,7 @@ export function fillTemplate(text, show, lang = "ko") {
     if (!out.includes(ph)) continue;
     if (val == null) {
       out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), "");
-      out = out.split(ph).join(lang === "en" ? "N/A" : "정보 없음");
+      out = out.split(ph).join(l === "en" ? "N/A" : "정보 없음");
     } else {
       out = out.split(ph).join(esc(val));
     }
@@ -51,23 +77,11 @@ export function fillTemplate(text, show, lang = "ko") {
   return out;
 }
 
-// 친근한 상태 문구 (화면용)
-export const MOOD = {
-  summer: {
-    safe: { emoji: "😎", ko: "괜찮아요", en: "All good" },
-    caution: { emoji: "🥵", ko: "더워요", en: "Hot" },
-    warning: { emoji: "🔥", ko: "많이 더워요", en: "Very hot" },
-    danger: { emoji: "🚨", ko: "위험해요", en: "Dangerous heat" },
-  },
-  winter: {
-    safe: { emoji: "😊", ko: "괜찮아요", en: "All good" },
-    caution: { emoji: "🥶", ko: "추워요", en: "Cold" },
-    warning: { emoji: "🧊", ko: "많이 추워요", en: "Very cold" },
-  },
-};
-
+// 친근한 상태 말투 ("추워요" 등). 문구는 i18n.js 의 mood.*
 export function mood(show, level = show.risk?.level ?? "safe") {
-  return MOOD[show.season]?.[level] ?? MOOD.winter.safe;
+  const season = show.season === "summer" ? "summer" : "winter";
+  const lv = season === "winter" && level === "danger" ? "warning" : level;
+  return t(`mood.${season}.${lv}`);
 }
 
 // 가방 챙기기: 날씨 준비물(actions.json 관객 안내 문구와 같게) + 공연 분위기별 설렘 준비물
@@ -95,11 +109,11 @@ export const PACK = {
 };
 
 // "2026-12-20" → { md: "12.20", wd: "일" }
-export function dateParts(ymd, lang = "ko") {
+export function dateParts(ymd, l = lang()) {
   if (!ymd) return { md: "-", wd: "" };
   const [y, m, d] = ymd.split("-").map(Number);
   const w = new Date(y, m - 1, d).getDay();
-  return { md: `${m}.${d}`, wd: (lang === "en" ? WEEK_EN : WEEK_KO)[w] };
+  return { md: `${m}.${d}`, wd: (l === "en" ? WEEK_EN : WEEK_KO)[w] };
 }
 
 export function round(n) {
@@ -110,10 +124,7 @@ export function round(n) {
 
 // 공연 분위기(테마). forecast.json 에 theme 필드가 있으면 그걸 쓰고,
 // 없으면 공연명으로 추정한다. (엔진에서 KOPIS 장르를 넘겨주면 더 정확해짐)
-export const THEMES = {
-  concert: { icon: "🎤", ko: "콘서트", greet: "무대 조명이 켜지기 전까지, 기다리는 시간도 즐겁게" },
-  christmas: { icon: "🎄", ko: "크리스마스 파티", greet: "따뜻하게 입고 와서 연말을 즐겨요" },
-};
+export const THEMES = { concert: true, christmas: true }; // 이름·인사말은 i18n.js 의 theme.* / greet.*
 
 const XMAS = /크리스마스|성탄|홀리데이|캐롤|캐럴|산타|연말|파티|christmas|xmas|holiday|carol|party/i;
 

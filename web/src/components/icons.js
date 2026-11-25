@@ -14,6 +14,7 @@ export const icon = {
   water: (s) => wrap(`<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/>`, s),
   cup: (s) => wrap(`<path d="M6 8h12l-1.5 12h-9L6 8ZM5 5h14M9 2.5 10 5"/>`, s),
   share: (s) => wrap(`<path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/>`, s),
+  shelter: (s) => wrap(`<path d="M3 11 12 4l9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/>`, s),
   check: (s) => wrap(`<path d="m5 12.5 4.5 4.5L19 7.5"/>`, s),
   ticket: (s) => wrap(`<path d="M3 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4v1.5A1.5 1.5 0 0 0 4.5 19h15a1.5 1.5 0 0 0 1.5-1.5V16a2 2 0 0 1 0-4 2 2 0 0 0 0-4V6.5A1.5 1.5 0 0 0 19.5 5h-15A1.5 1.5 0 0 0 3 6.5Z"/><path d="M15 5v14" stroke-dasharray="2 2.5"/>`, s),
 };

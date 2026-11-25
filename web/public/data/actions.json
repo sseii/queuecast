@@ -67,5 +67,27 @@
         "en": "The feels-like temperature will drop to {peak_feel}°C, which is very cold. Please do not wait outdoors for long and arrive in time for entry. If your hands or feet feel numb or you start shivering, go indoors right away."
       }
     }
+  },
+  "scale": {
+    "medium": {
+      "min_audience": 5000,
+      "label": "5천 명 이상",
+      "org": [
+        "MD 판매처·입장 게이트 앞 안내 인력 추가 배치",
+        "급수대·실내 쉼터 위치 안내 표지판 추가 설치",
+        "대기 줄 끝 위치를 실시간으로 안내 (현장 방송·SNS)"
+      ]
+    },
+    "large": {
+      "min_audience": 10000,
+      "label": "1만 명 이상",
+      "org": [
+        "5천 명 이상 조치 전부 시행",
+        "대기 구역을 구역별로 나눠 운영하고 구역마다 안내 인력·무전 체계 배치",
+        "의료 인력·구급 거점을 대기 구역 2곳 이상에 나눠 배치",
+        "입장 게이트 추가 개방 또는 좌석 구역별 입장 시간 분산",
+        "셔틀·대중교통 증편 요청, 공연 전후 교통 혼잡 안내"
+      ]
+    }
   }
 }

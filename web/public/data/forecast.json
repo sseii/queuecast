@@ -89,8 +89,17 @@
           "lat": 37.5193,
           "lng": 127.127,
           "distance_m": 60
+        },
+        {
+          "type": "실내 쉼터",
+          "place": "KSPO DOME",
+          "detail": "1층 로비 (예시)",
+          "lat": 37.5196,
+          "lng": 127.1272,
+          "distance_m": 40
         }
-      ]
+      ],
+      "expected_audience": 15000
     },
     {
       "id": "EX-XMAS",
@@ -162,8 +171,17 @@
           "lat": 37.5193,
           "lng": 127.127,
           "distance_m": 60
+        },
+        {
+          "type": "실내 쉼터",
+          "place": "올림픽홀",
+          "detail": "1층 로비 (예시)",
+          "lat": 37.516,
+          "lng": 127.1225,
+          "distance_m": 30
         }
-      ]
+      ],
+      "expected_audience": 2400
     },
     {
       "id": "EX-BAND",
@@ -251,8 +269,17 @@
           "lat": 37.5193,
           "lng": 127.127,
           "distance_m": 60
+        },
+        {
+          "type": "실내 쉼터",
+          "place": "핸드볼경기장",
+          "detail": "로비 (예시)",
+          "lat": 37.5172,
+          "lng": 127.126,
+          "distance_m": 50
         }
-      ]
+      ],
+      "expected_audience": 5000
     }
   ]
 }
