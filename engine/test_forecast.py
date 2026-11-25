@@ -1,6 +1,7 @@
 """API 키 없이 실행: python -m unittest test_forecast -v (engine 폴더에서)."""
 import csv
 import os
+import time
 import unittest
 from datetime import datetime
 from unittest import mock
@@ -187,6 +188,22 @@ class FillTest(unittest.TestCase):
     def test_partial_when_no_start_time(self):
         s = build_one("2026-12-05", "추후 공지", {}, "올림픽공원 (올림픽홀)")
         self.assertEqual(s["data_status"], "partial")
+
+
+class KopisTest(unittest.TestCase):
+    def test_in_park(self):
+        self.assertTrue(forecast.in_park({"facility": "올림픽공원 (KSPO DOME(체조경기장))"}))
+        self.assertTrue(forecast.in_park({"facility": "올림픽공원 (뮤즈라이브)"}))
+        self.assertFalse(forecast.in_park({"facility": "샤롯데씨어터"}))
+        self.assertFalse(forecast.in_park({"facility": None}))
+
+    def test_call_gap(self):
+        stamps = []
+        with mock.patch.object(forecast, "get", side_effect=lambda *a, **k: stamps.append(time.monotonic())):
+            for _ in range(3):
+                forecast._kopis_get("u", {}, "test")
+        gaps = [b - a for a, b in zip(stamps, stamps[1:])]
+        self.assertTrue(all(g >= forecast.KOPIS_GAP_S - 0.01 for g in gaps), gaps)
 
 
 class BuildTest(unittest.TestCase):

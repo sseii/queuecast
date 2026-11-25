@@ -15,7 +15,7 @@ from datetime import date as Date, datetime, timedelta
 import feel
 import kma
 import kopis
-from common import KST, ApiError, now_kst
+from common import KST, ApiError, get, now_kst
 
 DAYS_AHEAD = 3
 WAIT_HOURS = {"weekend": 4, "weekday": 2}   # 야외 대기 시작: 공연 시작 몇 시간 전부터 (분석 결과)
@@ -24,7 +24,9 @@ LATE_ARRIVAL_MIN = 90                       # caution 이상이면 공연 시작
 # 예정 공연은 실제 관객 수를 알 수 없어 공연장 객석 수를 쓴다 (docs/JSON_형식.md, 11/25 합의)
 VENUE_AUDIENCE = {"KSPO DOME": 15000, "핸드볼경기장": 6500, "올림픽홀": 3000, "우리금융아트홀": 1200, "기타": None}
 SCALE_LARGE, SCALE_MEDIUM = 10000, 5000     # 이상이면 large, medium, 그 아래 small
-MAX_FILL_GAP_H = 6                          # 보간할 때 앞뒤 값을 찾는 최대 거리 (단기예보 4일째는 3시간 간격)
+KOPIS_GAP_S = 0.3                           # KOPIS 호출 사이 최소 간격(초)
+PARK = "올림픽공원"
+MAX_FILL_GAP_H = 6                         # 보간할 때 앞뒤 값을 찾는 최대 거리 (단기예보 4일째는 3시간 간격)
 
 # 공휴일 (대체공휴일 포함)
 HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08", "2027-02-09", "2027-03-01"}
@@ -255,7 +257,27 @@ def _retry(fn, *args, tries=3, wait=1.0):
             time.sleep(wait * (i + 1))
 
 
+_last_kopis_call = [0.0]
+
+
+def _kopis_get(url, params, label, timeout=30):
+    """KOPIS 호출 사이를 KOPIS_GAP_S 이상 띄운다 (목록 페이지·상세·재시도 모두 이 함수를 지난다)."""
+    wait = _last_kopis_call[0] + KOPIS_GAP_S - time.monotonic()
+    if wait > 0:
+        time.sleep(wait)
+    try:
+        return get(url, params, label, timeout)
+    finally:
+        _last_kopis_call[0] = time.monotonic()
+
+
+def in_park(detail):
+    """상세 공연장명(fcltynm)에 '올림픽공원'이 있어야 남긴다."""
+    return PARK in (detail.get("facility") or "")
+
+
 def run():
+    kopis.get = _kopis_get          # kopis.py는 그대로 두고 호출 간격만 감싼다
     now = now_kst()
     today = now.date()
     last = today + timedelta(days=DAYS_AHEAD)
@@ -265,20 +287,22 @@ def run():
     details = []
     for s in shows:
         try:
-            details.append(_retry(kopis.fetch_detail, s["id"]))
+            det = _retry(kopis.fetch_detail, s["id"])
         except ApiError as e:
             _log(f"  상세 건너뜀 {s['id']}: {e}")
+            continue
         except Exception as e:          # 메시지에 URL이 섞일 수 있어 종류만 남긴다
             _log(f"  상세 건너뜀 {s['id']}: {type(e).__name__}")
-    try:
-        w = kma.fetch_hourly()
-        weather = w["hourly"]
-        b = w["base_date"] + w["base_time"]
-        weather_base = f"{b[:4]}-{b[4:6]}-{b[6:8]}T{b[8:10]}:{b[10:12]}:00+09:00"
-        _log(f"기상청 단기예보: 발표 {weather_base}")
-    except ApiError as e:
-        _log(f"기상청 단기예보 실패, 예보 없이 생성: {e}")
-        weather, weather_base = {}, None
+            continue
+        if not in_park(det):
+            _log(f"  올림픽공원 밖 공연장 제외 {s['id']}: {det.get('facility')}")
+            continue
+        details.append(det)
+    w = kma.fetch_hourly()          # 실패하면 main에서 직전 파일을 stale로 남긴다
+    weather = w["hourly"]
+    b = w["base_date"] + w["base_time"]
+    weather_base = f"{b[:4]}-{b[4:6]}-{b[6:8]}T{b[8:10]}:{b[10:12]}:00+09:00"
+    _log(f"기상청 단기예보: 발표 {weather_base}")
     return build(details, weather, now, weather_base)
 
 
