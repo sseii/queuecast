@@ -416,3 +416,9 @@ a.fac-tile:hover { background: var(--accent-soft); }
   .hero-text { position: relative; inset: auto; margin-top: auto; }
   .hero h1 { -webkit-line-clamp: 5; }
 }
+
+/* 예보 전 */
+:root { --pending: #a3a1b8; }
+.lv-dot-pending { background: var(--pending); }
+.lv-stub-pending { background: #6b6880; }
+.lv-text-pending { color: var(--sub); }

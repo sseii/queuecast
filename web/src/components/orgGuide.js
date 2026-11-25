@@ -3,7 +3,7 @@
 //  - 분야별 조치: 그늘·급수(겨울은 바람막이·보온) / 실내 대기 공간 / 의료 인력 / 입장·줄 운영 / 관객 안내
 //  - 조치마다 언제 할지: 공연 데이터(대기 시작·가장 위험한 시간·공연 시작)로 실제 시각을 계산
 //  문구: actions.json [계절][단계].org_detail (없으면 .org 목록을 그대로 보여줌)
-import { esc, fillTemplate, fmtPeople, levelName, LEVELS } from "../util.js";
+import { esc, fillTemplate, fmtPeople, levelName, levelOf, LEVELS, showKey } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { icon } from "./icons.js";
 import { scaleTier } from "./actionCard.js";
@@ -44,11 +44,13 @@ function hoursAtOrAbove(show, level) {
 }
 
 function guideBody(actions, show, level) {
-  const today = show.risk?.level ?? "safe";
+  const today = levelOf(show);
   const rankSel = LEVELS[level].rank, rankToday = LEVELS[today].rank;
   const hrs = level === "safe" ? null : hoursAtOrAbove(show, level);
   const status =
-    level === today
+    today === "pending"
+      ? t("guide.pending")
+      : level === today
       ? hrs ? t("guide.today.hrs", { l: levelName(level), h: hrs }) : t("guide.today", { l: levelName(level) })
       : rankSel > rankToday
         ? t("guide.preview.up", { l: levelName(level) })
@@ -60,7 +62,7 @@ function guideBody(actions, show, level) {
   const e = actions?.[show.season]?.[level];
   if (!e) return `<p class="guide-status">${status}</p>`;
 
-  const saved = load(show.id, level);
+  const saved = load(showKey(show), level);
   const detail = e.org_detail ?? e.org.map((text) => ({ cat: "queue", when: "", text }));
   const groups = CATS.map((c) => ({ c, items: detail.map((d, i) => ({ ...d, i })).filter((d) => d.cat === c) })).filter((g) => g.items.length);
   const cat = (c) => t(c === "shade" && show.season !== "summer" ? "cat.warm" : `cat.${c}`);
@@ -94,7 +96,8 @@ function guideBody(actions, show, level) {
 }
 
 export function orgGuide(actions, show) {
-  const today = show.risk?.level ?? "safe";
+  const today = levelOf(show);
+  const first = today === "pending" ? "caution" : today; // 처음 펼칠 단계
   const levels = levelsFor(show);
   const tier = scaleTier(actions, show);
   return `
@@ -107,16 +110,16 @@ export function orgGuide(actions, show) {
       ${levels
         .map(
           (lv) => `
-        <button type="button" role="tab" class="rung lv-rung-${lv}" data-org-level="${lv}" aria-selected="${lv === today}">
+        <button type="button" role="tab" class="rung lv-rung-${lv}" data-org-level="${lv}" aria-selected="${lv === first}">
           <span class="rung-name">${levelName(lv)}</span>
           ${lv === today ? `<span class="rung-today">${t("guide.forecast")}</span>` : ""}
         </button>`
         )
         .join("")}
     </div>
-    <div class="guide-body" data-guide-body>${guideBody(actions, show, today)}</div>
+    <div class="guide-body" data-guide-body>${guideBody(actions, show, first)}</div>
     ${
-      tier && today !== "safe"
+      tier && !["safe", "pending"].includes(today)
         ? `<div class="scale">
             <h3>${t("org.scale")}</h3>
             <p class="fine">${t("org.scale.sub", { n: fmtPeople(show.expected_audience), s: esc(tier.label) })}</p>
@@ -133,7 +136,7 @@ export function orgGuide(actions, show) {
 export function bindGuide(root, actions, show) {
   const box = root.querySelector("[data-guide]");
   if (!box) return;
-  let current = show.risk?.level ?? "safe";
+  let current = levelOf(show) === "pending" ? "caution" : levelOf(show);
   box.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-org-level]");
     if (!btn) return;
@@ -145,7 +148,7 @@ export function bindGuide(root, actions, show) {
     if (!e.target.matches("[data-org-item]")) return;
     const checked = [...box.querySelectorAll("[data-org-item]:checked")].map((i) => Number(i.dataset.orgItem));
     try {
-      localStorage.setItem(`qc-org-${show.id}-${current}`, JSON.stringify(checked));
+      localStorage.setItem(`qc-org-${showKey(show)}-${current}`, JSON.stringify(checked));
     } catch {}
   });
 }

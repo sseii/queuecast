@@ -155,6 +155,13 @@ const T = {
   "when.peak": { ko: "{a}~{b} 집중", en: "Focus {a}–{b}" },
   "when.after": { ko: "공연 끝난 뒤", en: "After the show" },
 
+  // 예보 전
+  "ticket.hint.pending": { ko: "예보는 공연 3일 전부터 나와요", en: "Forecast opens 3 days before" },
+  "strip.pending": { ko: "아직 예보 전이에요. 공연 3일 전부터 시간별 체감온도가 나와요.", en: "No forecast yet. Hourly feels-like opens 3 days before the show." },
+  "aud.pending": { ko: "아직 예보 전이에요. 예보가 나오면 날씨에 맞는 안내를 알려 드려요.", en: "No forecast yet. We'll post a notice once it's out." },
+  "guide.pending": { ko: "아직 예보 전이에요. 주의 단계부터 미리 볼 수 있어요.", en: "No forecast yet. Preview from the Caution level." },
+  "mood.pending": { ko: "곧 나와요", en: "Coming soon" },
+
   // 상태 말투
   "mood.summer.safe": { ko: "괜찮아요", en: "All good" },
   "mood.summer.caution": { ko: "더워요", en: "Hot" },

@@ -12,15 +12,15 @@ import { art } from "../components/art.js";
 import { icon } from "../components/icons.js";
 import { countdown, startCountdown, stopCountdown, timeline, packList, bindPack, shareButton, bindShare } from "../components/dayPlan.js";
 import { photosFor, photoImg } from "../photos.js";
-import { esc, dateParts, mood, round, fmtGenerated, fmtPeople, levelName, venueName, themeOf, vtName } from "../util.js";
+import { esc, dateParts, mood, round, fmtGenerated, fmtPeople, levelName, venueName, themeOf, vtName, levelOf, showKey } from "../util.js";
 import { themeChips } from "../components/chips.js";
 import { t, lang } from "../i18n.js";
 
 export async function renderDetail(app, mode, id, view = "fan") {
   const [data, actions] = await Promise.all([loadShows(mode), loadActions()]);
-  const show = data?.shows?.find((s) => s.id === id);
+  const show = data?.shows?.find((s) => showKey(s) === id) ?? data?.shows?.find((s) => s.id === id);
   const back = mode === "replay" ? "#/replay" : "#/";
-  const base = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(id)}`;
+  const base = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(id)}`; // 주소에 쓴 키 그대로
 
   if (!show) {
     document.body.dataset.theme = "";
@@ -28,20 +28,20 @@ export async function renderDetail(app, mode, id, view = "fan") {
     return;
   }
 
-  const level = show.risk?.level ?? "safe";
+  const level = levelOf(show);
   const theme = themeOf(show);
   document.body.dataset.theme = theme;
   const d = dateParts(show.date);
   const people = fmtPeople(show.expected_audience);
   const [p1, p2, p3] = photosFor(theme, show.id, 3);
   const others = (data.shows ?? [])
-    .filter((s) => s.id !== show.id)
+    .filter((s) => showKey(s) !== showKey(show))
     .sort((a, b) => `${a.date} ${a.start_time}`.localeCompare(`${b.date} ${b.start_time}`));
 
   app.innerHTML = `
     <a class="back" href="${back}">${t("back")}</a>
 
-    <section class="hero theme-${theme}" style="view-transition-name:${vtName(show.id)}">
+    <section class="hero theme-${theme}" style="view-transition-name:${vtName(showKey(show))}">
       <div class="hero-main">
         <div class="collage">
           <div class="cell cell-main">
@@ -63,9 +63,9 @@ export async function renderDetail(app, mode, id, view = "fan") {
       </div>
       <div class="hero-stub lv-stub-${esc(level)}">
         <span class="stub-label">${t("hero.feel")}</span>
-        <span class="hero-temp">${round(show.risk?.peak_feel)}°</span>
-        <span class="hero-mood">${mood(show, level)}</span>
-        <span class="stub-level">${t("hero.level", { l: levelName(level) })}</span>
+        <span class="hero-temp">${round(show.risk?.peak_feel)}${show.risk?.peak_feel == null ? "" : "°"}</span>
+        ${level === "pending" ? "" : `<span class="hero-mood">${mood(show, level)}</span>`}
+        <span class="stub-level">${level === "pending" ? t("ticket.hint.pending") : t("hero.level", { l: levelName(level) })}</span>
       </div>
     </section>
 
@@ -129,7 +129,7 @@ function fanView(actions, show, mode, base) {
       </div>
       <section class="block">
         <div class="block-head"><h2>${t("strip.title")}</h2></div>
-        ${hourlyStrip(show)}
+        ${levelOf(show) === "pending" ? `<p class="fine">${t("strip.pending")}</p>` : hourlyStrip(show)}
       </section>
       ${audienceCard(actions, show)}
       ${facilitiesCard(show)}
@@ -145,7 +145,7 @@ function orgView(actions, show) {
   return `
       <section class="block">
         <div class="block-head"><h2>${t("strip.title")}</h2></div>
-        ${hourlyStrip(show)}
+        ${levelOf(show) === "pending" ? `<p class="fine">${t("strip.pending")}</p>` : hourlyStrip(show)}
       </section>
       ${orgGuide(actions, show)}
       ${facilitiesCard(show)}`;

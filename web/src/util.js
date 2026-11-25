@@ -2,7 +2,9 @@
 import { t, lang } from "./i18n.js";
 
 // 단계 코드 → 표시 정보 (docs/JSON_형식.md 단계 표 기준)
+// pending: 아직 예보가 없음 (forecast_available false 또는 risk.level null) — 3일 전부터 예보가 나옴
 export const LEVELS = {
+  pending: { ko: "예보 전", en: "Not yet", rank: -1 },
   safe: { ko: "안전", en: "Safe", rank: 0 },
   caution: { ko: "주의", en: "Caution", rank: 1 },
   warning: { ko: "경고", en: "Warning", rank: 2 },
@@ -78,7 +80,12 @@ export function fillTemplate(text, show, l = lang()) {
 }
 
 // 친근한 상태 말투 ("추워요" 등). 문구는 i18n.js 의 mood.*
-export function mood(show, level = show.risk?.level ?? "safe") {
+export function levelOf(show) {
+  return show.forecast_available === false || !show.risk?.level ? "pending" : show.risk.level;
+}
+
+export function mood(show, level = levelOf(show)) {
+  if (level === "pending") return t("mood.pending");
   const season = show.season === "summer" ? "summer" : "winter";
   const lv = season === "winter" && level === "danger" ? "warning" : level;
   return t(`mood.${season}.${lv}`);
@@ -121,7 +128,7 @@ export function dateParts(ymd, l = lang()) {
 }
 
 export function round(n) {
-  if (n == null) return "-";
+  if (n == null) return "–";
   const r = Math.round(Number(n));
   return r < 0 ? `−${-r}` : String(r); // 진짜 마이너스 기호(−)가 숫자와 더 잘 붙어 보임
 }
@@ -156,6 +163,11 @@ export function seeded(key) {
     h = Math.imul(h ^ (h >>> 13), 3266489909);
     return ((h ^= h >>> 16) >>> 0) / 4294967296;
   };
+}
+
+// 같은 공연이 여러 날 하면 KOPIS id 가 같으므로, 공연 하나(회차 날짜)를 가리키는 키는 id + 날짜
+export function showKey(show) {
+  return show.date ? `${show.id}_${show.date}` : String(show.id);
 }
 
 export function vtName(id) {

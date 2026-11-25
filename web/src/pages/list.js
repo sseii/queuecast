@@ -1,7 +1,7 @@
 // 공연 목록 화면 (#7) — 티켓을 누르면 그 공연 화면이 펼쳐진다
 import { loadShows } from "../data.js";
 import { showCard } from "../components/showCard.js";
-import { LEVELS, esc, fmtGenerated, levelName } from "../util.js";
+import { LEVELS, esc, fmtGenerated, levelName, levelOf } from "../util.js";
 import { t } from "../i18n.js";
 import { stopCountdown } from "../components/dayPlan.js";
 
@@ -23,7 +23,7 @@ export async function renderList(app, mode) {
     `${a.date} ${a.start_time}`.localeCompare(`${b.date} ${b.start_time}`)
   );
   const counts = Object.keys(LEVELS)
-    .map((lv) => ({ lv, n: shows.filter((s) => (s.risk?.level ?? "safe") === lv).length }))
+    .map((lv) => ({ lv, n: shows.filter((s) => levelOf(s) === lv).length }))
     .filter((c) => c.n > 0);
 
   app.innerHTML = `

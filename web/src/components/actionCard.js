@@ -1,7 +1,7 @@
 // 관객 안내(한·영)와 공단·주최사 대응 체크리스트 (#8)
 //  - 관객 안내: actions.json [계절][단계].audience + 가장 가까운 실내 쉼터
 //  - 공단·주최사 대응은 orgGuide.js
-import { esc, fillTemplate, fmtPeople } from "../util.js";
+import { esc, fillTemplate, fmtPeople, levelOf } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { nearest, fmtDist, mapUrl } from "./facilities.js";
 import { icon } from "./icons.js";
@@ -11,18 +11,19 @@ function entry(actions, show) {
 }
 
 export function audienceCard(actions, show) {
-  const level = show.risk?.level ?? "safe";
+  const level = levelOf(show);
   const e = entry(actions, show);
-  const safe = level === "safe" || !e;
+  const pending = level === "pending";
+  const safe = !pending && (level === "safe" || !e);
   // 영어 화면이거나 해외 팬이 많은 공연이면 영어 안내를 먼저
   const order = lang() === "en" || show.foreign_audience ? ["en", "ko"] : ["ko", "en"];
   const tabLabel = { ko: "한국어", en: "English" };
   const [shelter] = nearest(show, "실내 쉼터");
 
   const body = (l) => `
-      <p class="notice-text">${safe ? t("aud.safe", {}, l) : fillTemplate(e.audience[l], show, l)}</p>
-      ${!safe && shelter ? shelterBox(shelter, show, l) : ""}
-      ${safe ? "" : `<button type="button" class="text-btn" data-copy="${l}">${t("aud.copy", {}, l)}</button>`}`;
+      <p class="notice-text">${pending ? t("aud.pending", {}, l) : safe ? t("aud.safe", {}, l) : fillTemplate(e.audience[l], show, l)}</p>
+      ${!safe && !pending && shelter ? shelterBox(shelter, show, l) : ""}
+      ${safe || pending ? "" : `<button type="button" class="text-btn" data-copy="${l}">${t("aud.copy", {}, l)}</button>`}`;
 
   return `
   <section class="block audience" data-tabs>
