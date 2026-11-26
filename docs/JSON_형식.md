@@ -76,7 +76,7 @@
 | `scale` | `"large"` / `"medium"` / `"small"` / null | 예상 대기 규모(대·중·소). expected_audience 1만 이상 large, 5천~1만 미만 medium, 5천 미만 small |
 | `exposed_people` | 숫자 | 엔진 내부 참고값. **화면에는 인원수로 표시하지 않고** `scale`(대·중·소)만 보여준다 |
 | `risk` | 객체 | `level` 대기 시간대 중 가장 높은 단계, `peak_feel`·`peak_time` 그때의 체감온도와 시각 |
-| `hourly[]` | 배열 | 대기 시간대의 시간별 값. `temp` 기온(℃), `humidity` 습도(%), `wind` 풍속(m/s), `feel` 체감온도(℃), `level` 단계 |
+| `hourly[]` | 배열 | 대기 시간대의 시간별 값. `temp` 기온(℃), `humidity` 습도(%), `wind` 풍속(m/s), `feel` 체감온도(℃), `level` 단계. `filled`가 true면 기상청 값이 없는 정시를 앞뒤 값으로 선형 보간한 행이다 |
 | `parking_full_eta` | 문자열 또는 null | 만차 예상 시각. `analysis/parking_full_eta.json`(공연장 × 평일/주말)에서 찾아 넣음. 이력이 없으면 null → 웹은 "대중교통 이용 권장" |
 | `recommended_arrival` | 문자열 | 권장 도착 시각. 안전이면 대기 시간대 시작, 주의 이상이면 입장 시작 직전으로 늦춤 |
 | `facilities[]` | 배열 | 공연장 기준 가까운 음수대·화장실·자판기·간이편의점 최대 3개씩 (`analysis/facilities.json`, 직선거리) |
