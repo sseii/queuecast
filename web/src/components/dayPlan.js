@@ -1,5 +1,5 @@
 // 공연 날을 기다리며: 카운트다운 · 그날의 타임라인 · 가방 챙기기 · 친구에게 보내기
-import { esc, round, PACK, themeOf, genreOf, showTime, levelName, venueName } from "../util.js";
+import { esc, round, PACK, themeOf, genreOf, showTime, levelName, venueName, levelOf, showKey } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { icon } from "./icons.js";
 
@@ -43,7 +43,7 @@ export function stopCountdown() {
 
 // ── 그날의 타임라인 ──
 export function timeline(show) {
-  const level = show.risk?.level ?? "safe";
+  const level = levelOf(show);
   const events = [
     show.wait_window?.start && { t: show.wait_window.start, ic: "queue", title: t("tl.queue"), sub: t("tl.queue.sub") },
     show.parking_full_eta && { t: show.parking_full_eta, ic: "parking", title: t("tl.parking"), sub: t("tl.parking.sub") },
@@ -80,10 +80,10 @@ export function packList(show) {
   // 응원봉은 콘서트(대중음악)일 때만
   const extra = theme === "christmas" ? PACK.christmas : genreOf(show) === "concert" ? PACK.concert : PACK.stage;
   const items = [...(PACK[show.season] ?? []), ...extra];
-  const saved = load(show.id);
+  const saved = load(showKey(show));
   const done = items.filter((it) => saved.includes(it.id)).length;
   return `
-  <div class="pack ${done === items.length ? "is-complete" : ""}" data-pack="${esc(show.id)}">
+  <div class="pack ${done === items.length ? "is-complete" : ""}" data-pack="${esc(showKey(show))}">
     <div class="pack-progress" data-done-label="${t("pack.done")}">
       <span class="pack-count">${t("pack.count", { d: done, n: items.length })}</span>
       <span class="pack-bar"><i style="width:${(done / items.length) * 100}%"></i></span>

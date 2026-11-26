@@ -33,6 +33,7 @@ function renderChrome(mode) {
   });
   document.querySelector("[data-lang-toggle]").textContent = t("nav.lang");
   document.getElementById("credit").textContent = t("footer");
+  document.getElementById("sources").textContent = t("kopis"); // KOPIS 이용 규정 문구 그대로
   document.title = lang() === "en" ? "QueueCast" : "큐캐스트 QueueCast";
 }
 

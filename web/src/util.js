@@ -2,7 +2,9 @@
 import { t, lang } from "./i18n.js";
 
 // 단계 코드 → 표시 정보 (docs/JSON_형식.md 단계 표 기준)
+// pending: 아직 예보가 없음 (forecast_available false 또는 risk.level null) — 3일 전부터 예보가 나옴
 export const LEVELS = {
+  pending: { ko: "예보 전", en: "Not yet", rank: -1 },
   safe: { ko: "안전", en: "Safe", rank: 0 },
   caution: { ko: "주의", en: "Caution", rank: 1 },
   warning: { ko: "경고", en: "Warning", rank: 2 },
@@ -50,6 +52,24 @@ export function levelName(level) {
   return LEVELS[level]?.[lang()] ?? "";
 }
 
+// 대기 규모(대·중·소). 엔진의 scale 을 쓰고, 없으면 expected_audience(객석 수)로 계산.
+// 화면에는 인원수를 쓰지 않고 규모만 보여 준다 (docs/JSON_형식.md)
+export function scaleOf(show) {
+  if (["large", "medium", "small"].includes(show.scale)) return show.scale;
+  const n = show.expected_audience;
+  if (n == null) return null;
+  return n >= 10000 ? "large" : n >= 5000 ? "medium" : "small";
+}
+
+// weather_base(예보 발표 시각) → "11월 25일 14시" / "Nov 25, 14:00"
+export function fmtBase(iso) {
+  const m = iso?.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (!m) return null;
+  return lang() === "en"
+    ? `${MON_EN[Number(m[2]) - 1]} ${Number(m[3])}, ${m[4]}:${m[5]}`
+    : `${Number(m[2])}월 ${Number(m[3])}일 ${Number(m[4])}시`;
+}
+
 // 예상 관객 수 15000 → "15,000"
 export function fmtPeople(n) {
   return n == null ? null : Number(n).toLocaleString("en-US");
@@ -68,8 +88,10 @@ export function fillTemplate(text, show, l = lang()) {
     const ph = `{${key}}`;
     if (!out.includes(ph)) continue;
     if (val == null) {
-      out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), "");
-      out = out.split(ph).join(l === "en" ? "N/A" : "정보 없음");
+      // 만차 예상 시각이 없으면 "(대중교통 이용 권장)" (이슈 #7), 그 밖의 값은 괄호째 지운다
+      const instead = key === "parking_full_eta" ? (l === "en" ? " (public transport recommended)" : " (대중교통 이용 권장)") : "";
+      out = out.replace(new RegExp(`\\s*\\([^()]*\\{${key}\\}[^()]*\\)`, "g"), instead);
+      out = out.split(ph).join(key === "parking_full_eta" ? (l === "en" ? "public transport recommended" : "대중교통 이용 권장") : l === "en" ? "N/A" : "정보 없음");
     } else {
       out = out.split(ph).join(esc(val));
     }
@@ -78,7 +100,12 @@ export function fillTemplate(text, show, l = lang()) {
 }
 
 // 친근한 상태 말투 ("추워요" 등). 문구는 i18n.js 의 mood.*
-export function mood(show, level = show.risk?.level ?? "safe") {
+export function levelOf(show) {
+  return show.forecast_available === false || !show.risk?.level ? "pending" : show.risk.level;
+}
+
+export function mood(show, level = levelOf(show)) {
+  if (level === "pending") return t("mood.pending");
   const season = show.season === "summer" ? "summer" : "winter";
   const lv = season === "winter" && level === "danger" ? "warning" : level;
   return t(`mood.${season}.${lv}`);
@@ -121,7 +148,7 @@ export function dateParts(ymd, l = lang()) {
 }
 
 export function round(n) {
-  if (n == null) return "-";
+  if (n == null) return "–";
   const r = Math.round(Number(n));
   return r < 0 ? `−${-r}` : String(r); // 진짜 마이너스 기호(−)가 숫자와 더 잘 붙어 보임
 }
@@ -156,6 +183,11 @@ export function seeded(key) {
     h = Math.imul(h ^ (h >>> 13), 3266489909);
     return ((h ^= h >>> 16) >>> 0) / 4294967296;
   };
+}
+
+// 같은 공연이 여러 날 하면 KOPIS id 가 같으므로, 공연 하나(회차 날짜)를 가리키는 키는 id + 날짜
+export function showKey(show) {
+  return show.date ? `${show.id}_${show.date}` : String(show.id);
 }
 
 export function vtName(id) {

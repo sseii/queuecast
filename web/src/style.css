@@ -416,3 +416,20 @@ a.fac-tile:hover { background: var(--accent-soft); }
   .hero-text { position: relative; inset: auto; margin-top: auto; }
   .hero h1 { -webkit-line-clamp: 5; }
 }
+
+/* 예보 전 */
+:root { --pending: #a3a1b8; }
+.lv-dot-pending { background: var(--pending); }
+.lv-stub-pending { background: #6b6880; }
+.lv-text-pending { color: var(--sub); }
+
+/* 기준 시각 강조 (stale) */
+.updated.is-stale { display: inline-flex; align-items: center; gap: 6px; color: #9a3412; background: #ffedd5; font-weight: 700; padding: 5px 12px; border-radius: 999px; }
+/* 대기 규모·일부 예보 없음 꼬리표 */
+.scale-chip { background: rgb(255 255 255 / 0.9); color: var(--ink); }
+.partial-chip { background: #ffedd5; color: #9a3412; }
+/* 편의시설: 종류 수에 맞춰 칸 */
+.fac-grid, .fac-grid.fac-4 { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.site-footer #sources { color: var(--sub); }
+@media (max-width: 640px) { .fac-grid, .fac-grid.fac-4 { grid-template-columns: 1fr; } }
+.ticket-mini .scale-chip, .ticket-mini .partial-chip { display: none; }
