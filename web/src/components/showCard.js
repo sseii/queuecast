@@ -42,3 +42,47 @@ export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
     </div>
   </a>`;
 }
+
+// ── 목록에서 같은 공연(같은 KOPIS id) 여러 날짜를 카드 1장으로 묶기 ──
+// 카드 내용은 가장 가까운 날짜 기준. 날짜 칩을 누르면 그 날짜의 상세 화면(#/show/id_날짜)으로 간다.
+// 상세 화면·주소·체크 저장은 날짜별 그대로라 손대지 않는다.
+export function groupShows(shows) {
+  const groups = new Map();
+  for (const s of shows) {
+    if (!groups.has(s.id)) groups.set(s.id, []);
+    groups.get(s.id).push(s);
+  }
+  return [...groups.values()]; // shows 가 날짜순이면 묶음도 첫 날짜순
+}
+
+export function groupCard(dates, mode) {
+  const first = dates[0];
+  if (dates.length === 1) return showCard(first, mode);
+  const base = `#/${mode === "replay" ? "replay" : "show"}/`;
+  const chips = dates
+    .map((s) => {
+      const d = dateParts(s.date);
+      const lv = levelOf(s);
+      return `<a class="date-chip" href="${base}${encodeURIComponent(showKey(s))}" data-vt="${vtName(showKey(s))}"
+        title="${esc(`${d.md} ${s.start_time ?? ""} · ${levelName(lv)}`)}"><i class="dot lv-dot-${esc(lv)}"></i>${d.md}<small>${d.wd}</small></a>`;
+    })
+    .join("");
+  // showCard 의 <a> 를 <div> 로 바꾸고, 카드 전체를 덮는 링크 + 그 위의 날짜 칩
+  return showCard(first, mode)
+    .replace(/^\s*<a class="ticket /, '<div class="ticket is-group ')
+    .replace(/<\/a>\s*$/, "</div>")
+    .replace(/ href="[^"]*" data-id=/, " data-id=")
+    .replace('<div class="ticket-body">', `<a class="ticket-link" href="${base}${encodeURIComponent(showKey(first))}" aria-label="${esc(first.title)}"></a>
+    <div class="ticket-body">`)
+    .replace(/<p class="ticket-hint">/, `<span class="date-chips" aria-label="${t("ticket.dates")}">${chips}</span><p class="ticket-hint">`);
+}
+
+// 날짜 칩을 누르면 펼침 효과가 그 날짜 상세로 이어지게 view-transition-name 을 옮긴다
+export function bindGroupCards(root) {
+  root.querySelectorAll(".ticket.is-group .date-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const card = chip.closest(".ticket");
+      card.style.viewTransitionName = chip.dataset.vt;
+    });
+  });
+}

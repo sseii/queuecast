@@ -2,7 +2,7 @@
 //  ① 첫 화면(사진 배경 + 제목 + 오늘 예보 요약)  ② 바로가기 4칸  ③ 공연 티켓 목록
 //  티켓을 누르면 그 공연 화면이 펼쳐진다
 import { loadShows } from "../data.js";
-import { showCard } from "../components/showCard.js";
+import { groupShows, groupCard, bindGroupCards } from "../components/showCard.js";
 import { LEVELS, fmtGenerated, fmtBase, levelName, levelOf } from "../util.js";
 import { t } from "../i18n.js";
 import { icon } from "../components/icons.js";
@@ -20,6 +20,7 @@ export async function renderList(app, mode) {
   const counts = Object.keys(LEVELS)
     .map((lv) => ({ lv, n: shows.filter((s) => levelOf(s) === lv).length }))
     .filter((c) => c.n > 0);
+  const groups = groupShows(shows); // 같은 공연 여러 날짜 → 카드 1장
 
   app.innerHTML = `
     <section class="hero-band ${mode === "replay" ? "is-replay" : ""}">
@@ -39,7 +40,7 @@ export async function renderList(app, mode) {
     </section>
 
     <nav class="quick" aria-label="${t("quick.label")}">
-      ${quick("ticket", t("quick.shows"), t("quick.shows.sub", { n: shows.length }), mode === "replay" ? "#/replay" : "#/", "tickets")}
+      ${quick("ticket", t("quick.shows"), t("quick.shows.sub", { n: groups.length }), mode === "replay" ? "#/replay" : "#/", "tickets")}
       ${quick("thermo", t("quick.levels"), t("quick.levels.sub"), "#/about/levels")}
       ${quick("medical", t("quick.guide"), t("quick.guide.sub"), "#/about/guide")}
       ${
@@ -59,11 +60,13 @@ export async function renderList(app, mode) {
           ? `<div class="empty"><p><b>${t(`list.loading.${mode}`)}</b></p>
               <p class="fine">${t("list.loading.sub", { f: mode === "replay" ? "replay_2025.json" : "forecast.json" })}</p></div>`
           : shows.length
-            ? `<div class="ticket-grid">${shows.map((s) => showCard(s, mode)).join("")}</div>`
+            ? `<div class="ticket-grid">${groups.map((g) => groupCard(g, mode)).join("")}</div>`
             : `<div class="empty"><p>${t("list.none")}</p></div>`
       }
     </section>
   `;
+
+  bindGroupCards(app);
 
   // 바로가기 "공연 예보"는 같은 화면 아래 티켓 목록으로 이동
   app.querySelector('[data-scroll="tickets"]')?.addEventListener("click", (e) => {

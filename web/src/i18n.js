@@ -127,6 +127,7 @@ const T = {
   "levels.w2": { ko: "경고 영하 25℃ 이하", en: "Warning −25℃ or below" },
 
   // 티켓
+  "ticket.dates": { ko: "공연 날짜", en: "Show dates" },
   "ticket.feel": { ko: "대기 체감", en: "Queue feel" },
   "ticket.hint": { ko: "{t} 이후 도착 추천", en: "Arrive after {t}" },
   "ticket.hint.safe": { ko: "편하게 오셔도 돼요", en: "Come whenever you like" },
