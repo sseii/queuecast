@@ -31,10 +31,11 @@ function parse() {
 }
 
 // 머리·꼬리 글자 (언어 바뀔 때마다)
-function renderChrome({ page, mode }) {
+function renderChrome(r) {
+  const { page, mode } = r;
   document.documentElement.lang = lang();
   document.querySelectorAll("[data-i18n]").forEach((el) => (el.textContent = t(el.dataset.i18n)));
-  const current = page === "about" ? "about" : mode;
+  const current = page === "about" ? "about" : r.listView === "org" && mode === "forecast" ? "ops" : mode;
   document.querySelectorAll(".main-nav [data-nav]").forEach((a) => {
     a.classList.toggle("active", a.dataset.nav === current);
     if (a.dataset.nav === current) a.setAttribute("aria-current", "page");

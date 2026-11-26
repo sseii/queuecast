@@ -33,7 +33,7 @@ export async function renderDetail(app, mode, id, view = "fan") {
   const theme = themeOf(show);
   document.body.dataset.theme = theme;
   const d = dateParts(show.date);
-  const [p1, p2, p3] = photosFor(theme, show.id, 3);
+  const [p1, p2, p3] = photosFor(show, 3);
   const others = (data.shows ?? [])
     .filter((s) => showKey(s) !== showKey(show))
     .sort((a, b) => `${a.date} ${a.start_time}`.localeCompare(`${b.date} ${b.start_time}`));

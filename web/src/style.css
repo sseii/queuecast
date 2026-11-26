@@ -603,3 +603,143 @@ body[data-theme="about"] .feature { background: var(--paper); }
   .list-switch { min-width: 0; width: 100%; }
   .brief-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ════════ 기관 사이트 톤 (참고: 국립태권도박물관 아카이브) ════════
+   하얀 바탕 · 남색 주조 · 빨강 포인트 점 · 가운데 제목 · 사진 띠 위 아이콘 칸 · 사진 띠 타임라인 */
+:root { --navy: #1f2a5c; --accent: #3a3fae; --accent-soft: #eef0fb; --point: #d6334a; --tile: #f5f6f9; --ink: #1a1a1f; --sub: #66676f; }
+body[data-theme=""] { --page: #ffffff; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* 머리: 하얀 바탕, 가운데 메뉴 */
+.site-header { background: #fff; border-bottom: 1px solid #ececf1; backdrop-filter: none; }
+.header-inner { height: 76px; }
+.logo { margin-right: 0; }
+.logo-mark { color: var(--navy); }
+.main-nav { margin: 0 auto; gap: 18px; }
+.main-nav a { color: var(--ink); font-size: 0.97rem; padding: 10px 6px; }
+.main-nav a:hover { background: none; color: var(--accent); }
+.main-nav a.active { color: var(--accent); }
+.main-nav a.active::after { left: 6px; right: 6px; bottom: -14px; height: 3px; background: var(--accent); }
+.main-nav .lang-toggle { position: absolute; right: 20px; }
+.header-inner { position: relative; }
+
+/* 첫머리: 큰 제목 + 공연 찾기 */
+.intro2 { position: relative; display: grid; grid-template-columns: 1.25fr 1fr; align-items: end; gap: 32px; padding: 72px 0 64px; }
+.intro2-text { position: relative; z-index: 1; }
+.intro2 h1 { font-size: clamp(2.3rem, 5.6vw, 3.6rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1.12; color: var(--ink); }
+.intro2-sub { margin-top: 16px; color: var(--sub); font-size: 1.02rem; max-width: 34em; }
+.intro2 .intro-meta { margin-top: 20px; }
+.intro2 .count-pill { background: var(--tile); }
+.search { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; border-bottom: 3px solid var(--ink); padding: 6px 0 10px; }
+.search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 1.08rem; color: var(--ink); padding: 8px 2px; }
+.search input::placeholder { color: #a3a4ad; }
+.search button { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--ink); color: #fff; display: grid; place-items: center; cursor: pointer; flex: none; }
+.search:focus-within { border-bottom-color: var(--accent); }
+.deco { position: absolute; pointer-events: none; z-index: 0; }
+.deco-dots { left: -70px; top: 36px; width: 170px; height: 170px; border-radius: 50%;
+  background: radial-gradient(circle, rgb(214 51 74 / 0.35) 1.6px, transparent 2px) 0 0 / 11px 11px;
+  -webkit-mask: radial-gradient(circle at 70% 50%, #000 40%, transparent 72%); mask: radial-gradient(circle at 70% 50%, #000 40%, transparent 72%); }
+.deco-lines { right: -60px; top: 18px; width: 180px; height: 180px; border-radius: 50%;
+  background: repeating-linear-gradient(90deg, rgb(26 26 31 / 0.10) 0 1px, transparent 1px 5px); }
+
+/* 사진 띠 + 바로가기 아이콘 칸 */
+.photo-band { position: relative; width: 100vw; margin-left: calc(50% - 50vw); min-height: 380px; overflow: hidden; background: #12142a; display: grid; place-items: center; padding: 56px 20px 72px; }
+.photo-band::after { content: ""; position: absolute; inset: 0; background: rgb(12 14 32 / 0.62); }
+.band-photo { position: absolute; inset: 0; }
+.band-tiles { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6, 118px); gap: 14px; }
+.band-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; height: 118px; text-decoration: none; color: #fff;
+  background: rgb(10 12 28 / 0.42); border: 1px solid rgb(255 255 255 / 0.12); border-radius: 4px; font-size: 0.9rem; font-weight: 700; text-align: center; transition: background 0.15s; }
+.band-tile:hover { background: var(--accent); }
+.band-tile .ico { width: 34px; height: 34px; }
+.scroll-down { position: absolute; z-index: 1; bottom: 16px; left: 50%; transform: translateX(-50%); color: rgb(255 255 255 / 0.85); font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.scroll-down i { width: 18px; height: 28px; border: 2px solid currentColor; border-radius: 10px; position: relative; }
+.scroll-down i::after { content: ""; position: absolute; left: 50%; top: 5px; width: 2px; height: 6px; margin-left: -1px; background: currentColor; border-radius: 2px; animation: wheel 1.6s ease-in-out infinite; }
+@keyframes wheel { 50% { transform: translateY(6px); opacity: 0.3; } }
+
+/* 가운데 제목 구역 */
+.list-section { padding-top: 72px; }
+.center-title { text-align: center; font-size: clamp(1.7rem, 3.6vw, 2.2rem); font-weight: 900; letter-spacing: -0.045em; }
+.list-switch { margin: 18px auto 10px; max-width: 360px; }
+.section-lead { text-align: center; margin: 6px 0 28px; }
+.list-section .briefing { margin-top: 18px; }
+.ticket-grid > .t-wrap { display: flex; }
+.ticket-grid > .t-wrap > .ticket { width: 100%; }
+.ticket-grid > .t-wrap[hidden] { display: none; }
+.center { text-align: center; }
+
+/* 대기 타임라인 (사진 띠) */
+.timeline-band { position: relative; width: 100vw; margin-left: calc(50% - 50vw); margin-top: 88px; overflow: hidden; color: #fff; background: #151a3a; }
+.timeline-band::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(18 22 54 / 0.92), rgb(18 22 54 / 0.7)); }
+.tl-inner { position: relative; z-index: 1; padding-top: 56px; padding-bottom: 60px; }
+.tl-kicker { font-size: 0.95rem; color: rgb(255 255 255 / 0.75); font-weight: 600; }
+.tl-head h2 { font-size: clamp(1.7rem, 3.6vw, 2.3rem); font-weight: 900; letter-spacing: -0.045em; margin-top: 4px; }
+.tl-month { position: absolute; top: 0; right: 20px; width: 92px; height: 92px; background: var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.tl-month small { font-size: 0.78rem; opacity: 0.85; }
+.tl-month b { font-size: 1.9rem; font-weight: 900; letter-spacing: -0.04em; }
+.tl-days { list-style: none; padding: 0; margin: 40px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border-top: 1px solid rgb(255 255 255 / 0.35); }
+.tl-days > li { position: relative; padding: 22px 22px 0 0; }
+.tl-days > li::before { content: ""; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgb(255 255 255 / 0.18); }
+.tl-date { display: block; font-size: 0.9rem; color: rgb(255 255 255 / 0.75); margin-bottom: 10px; }
+.tl-date b { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.03em; margin-right: 4px; }
+.tl-days ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.tl-days a { display: grid; grid-template-columns: 14px 1fr; column-gap: 4px; color: #fff; text-decoration: none; line-height: 1.4; }
+.tl-days a .dot { margin-top: 6px; }
+.tl-show { font-weight: 700; font-size: 0.93rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tl-days a small { grid-column: 2; font-size: 0.78rem; color: rgb(255 255 255 / 0.7); }
+.tl-days a:hover .tl-show { text-decoration: underline; }
+
+/* 공연장 안내 */
+.venues { padding-top: 80px; }
+.venue-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 28px 0 12px; }
+.venue { border: 1px solid #e6e7ee; border-radius: 6px; padding: 22px 20px 18px; background: #fff; display: flex; flex-direction: column; }
+.venue h3 { font-size: 1.15rem; font-weight: 900; letter-spacing: -0.03em; }
+.venue-seats { color: var(--sub); font-size: 0.85rem; margin: 4px 0 14px; }
+.venue dl { margin: 0 0 16px; display: grid; gap: 8px; }
+.venue dl div { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; border-top: 1px solid #f0f1f5; padding-top: 8px; }
+.venue dt { color: var(--sub); }
+.venue dd { margin: 0; font-weight: 800; }
+.venue-btn { margin-top: auto; border: 1px solid var(--ink); background: #fff; font: inherit; font-weight: 700; font-size: 0.88rem; padding: 10px 12px; border-radius: 4px; cursor: pointer; }
+.venue-btn:hover { background: var(--ink); color: #fff; }
+.venue .fine { margin-top: auto; }
+
+/* 꼬리: 하얀 기관 사이트형 */
+.site-footer { background: #fff; color: var(--sub); border-top: 1px solid #ececf1; margin-top: 96px; }
+.footer-inner { grid-template-columns: 1.1fr 1fr 1fr; align-items: start; padding-top: 36px; padding-bottom: 32px; }
+.f-logo { color: var(--ink); }
+.f-links { justify-content: flex-start; gap: 8px 22px; }
+.f-links a { color: var(--ink); font-size: 0.88rem; }
+.f-side { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.f-partners-label { font-size: 0.75rem; color: var(--sub); }
+.f-partners { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.f-partners li { border: 1px solid #dedfe6; border-radius: 999px; padding: 4px 11px; font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+.f-gh { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #dedfe6; display: grid; place-items: center; color: var(--ink); }
+.f-meta { border-top-color: #ececf1; }
+.site-footer #sources { color: var(--sub); }
+#credit { color: #8d8e96; }
+.to-top { background: var(--ink); }
+
+@media (max-width: 1000px) {
+  .band-tiles { grid-template-columns: repeat(3, 118px); }
+  .venue-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-inner { grid-template-columns: 1fr; }
+  .f-side { align-items: flex-start; }
+  .f-partners { justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .main-nav { margin: 0; gap: 2px; }
+  .main-nav a { padding: 14px 12px; }
+  .main-nav a.active::after { bottom: 12px; }
+  .main-nav .lang-toggle { position: static; }
+  .intro2 { grid-template-columns: 1fr; padding: 40px 0 36px; gap: 24px; }
+  .deco-dots { left: -90px; top: 10px; }
+  .deco-lines { display: none; }
+  .band-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 8px; }
+  .band-tile { height: 96px; font-size: 0.8rem; gap: 8px; }
+  .photo-band { min-height: 0; padding: 32px 14px 64px; }
+  .tl-month { width: 70px; height: 70px; right: 14px; }
+  .tl-month b { font-size: 1.4rem; }
+  .tl-days { grid-template-columns: 1fr; border-top: 0; border-left: 1px solid rgb(255 255 255 / 0.35); margin-left: 6px; }
+  .tl-days > li { padding: 0 0 24px 22px; }
+  .tl-days > li::before { top: 4px; left: -7px; }
+  .venue-grid { grid-template-columns: 1fr; }
+}

@@ -3,9 +3,9 @@ import { esc, dateParts, mood, round, levelName, venueName, themeOf, vtName, dda
 import { themeChips } from "./chips.js";
 import { t } from "../i18n.js";
 import { art } from "./art.js";
-import { photosFor, photoImg } from "../photos.js";
+import { photosFor, pickPhoto, photoImg } from "../photos.js";
 
-export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
+export function showCard(show, mode, { mini = false, view = "fan", used = null } = {}) {
   const level = levelOf(show);
   const theme = themeOf(show);
   const d = dateParts(show.date);
@@ -17,7 +17,7 @@ export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
     : level === "safe" || !show.recommended_arrival ? t("ticket.hint.safe")
     : t("ticket.hint", { t: esc(show.recommended_arrival) });
   const ww = show.wait_window?.start && show.wait_window?.end ? t("ticket.wait", { a: esc(show.wait_window.start), b: esc(show.wait_window.end) }) : "";
-  const [photo] = photosFor(theme, show.id, 1);
+  const photo = used ? pickPhoto(show, used) : photosFor(show, 1)[0];
 
   return `
   <a class="ticket theme-${theme} ${mini ? "ticket-mini" : ""}" href="${href}" data-id="${esc(showKey(show))}"
@@ -61,9 +61,9 @@ export function groupShows(shows) {
   return [...groups.values()]; // shows 가 날짜순이면 묶음도 첫 날짜순
 }
 
-export function groupCard(dates, mode, view = "fan") {
+export function groupCard(dates, mode, view = "fan", used = null) {
   const first = dates[0];
-  if (dates.length === 1) return showCard(first, mode, { view });
+  if (dates.length === 1) return showCard(first, mode, { view, used });
   const base = `#/${mode === "replay" ? "replay" : "show"}/`;
   const tail = view === "org" ? "/org" : "";
   const chips = dates
@@ -75,7 +75,7 @@ export function groupCard(dates, mode, view = "fan") {
     })
     .join("");
   // showCard 의 <a> 를 <div> 로 바꾸고, 카드 전체를 덮는 링크 + 그 위의 날짜 칩
-  return showCard(first, mode, { view })
+  return showCard(first, mode, { view, used })
     .replace(/^\s*<a class="ticket /, '<div class="ticket is-group ')
     .replace(/<\/a>\s*$/, "</div>")
     .replace(/ href="[^"]*" data-id=/, " data-id=")
