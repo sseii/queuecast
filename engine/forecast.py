@@ -244,7 +244,7 @@ def build_show(detail, d, weather):
             "wait_window": {"start": None, "end": None}, "season": season,
             "forecast_available": False, "data_status": "partial",
             "expected_audience": audience, "scale": scale(audience),
-            "exposed_people": None,
+            "exposed_people": None, "actual_audience": None,   # actual_audience는 replay_2025.json에서만 채움
             "risk": {"level": None, "peak_feel": None, "peak_time": None}, "hourly": [],
             "parking_full_eta": parking_eta(venue, dt_type), "recommended_arrival": None,
             "facilities": nearest_facilities(venue)}

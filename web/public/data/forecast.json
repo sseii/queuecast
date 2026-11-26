@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-26T00:02:45+09:00",
-  "weather_base": "2026-11-25T23:00:00+09:00",
+  "generated_at": "2026-11-26T21:51:02+09:00",
+  "weather_base": "2026-11-26T20:00:00+09:00",
   "weather_source": "기상청 단기예보 (격자 nx=62, ny=126 송파구)",
   "show_source": "KOPIS 공연목록",
   "stale": false,
@@ -24,36 +24,37 @@
       "expected_audience": 15000,
       "scale": "large",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 12.0,
+        "peak_feel": 13.0,
         "peak_time": "19:00"
       },
       "hourly": [
         {
           "time": "17:00",
-          "temp": 14.0,
+          "temp": 15.0,
           "humidity": 80,
-          "wind": 2.9,
-          "feel": 14.0,
+          "wind": 3.6,
+          "feel": 15.0,
           "level": "safe",
           "filled": false
         },
         {
           "time": "18:00",
-          "temp": 13.0,
+          "temp": 14.0,
           "humidity": 85,
-          "wind": 2.1,
-          "feel": 13.0,
+          "wind": 3.9,
+          "feel": 14.0,
           "level": "safe",
           "filled": false
         },
         {
           "time": "19:00",
-          "temp": 12.0,
+          "temp": 13.0,
           "humidity": 85,
-          "wind": 2.1,
-          "feel": 12.0,
+          "wind": 4.2,
+          "feel": 13.0,
           "level": "safe",
           "filled": false
         }
@@ -178,27 +179,28 @@
       "expected_audience": 3000,
       "scale": "small",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
         "peak_feel": 12.0,
-        "peak_time": "19:00"
+        "peak_time": "20:00"
       },
       "hourly": [
         {
           "time": "18:00",
-          "temp": 13.0,
+          "temp": 14.0,
           "humidity": 85,
-          "wind": 2.1,
-          "feel": 13.0,
+          "wind": 3.9,
+          "feel": 14.0,
           "level": "safe",
           "filled": false
         },
         {
           "time": "19:00",
-          "temp": 12.0,
+          "temp": 13.0,
           "humidity": 85,
-          "wind": 2.1,
-          "feel": 12.0,
+          "wind": 4.2,
+          "feel": 13.0,
           "level": "safe",
           "filled": false
         },
@@ -206,7 +208,7 @@
           "time": "20:00",
           "temp": 12.0,
           "humidity": 85,
-          "wind": 1.9,
+          "wind": 3.3,
           "feel": 12.0,
           "level": "safe",
           "filled": false
@@ -332,54 +334,55 @@
       "expected_audience": 1200,
       "scale": "small",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 5.0,
-        "peak_time": "11:00"
+        "peak_feel": 5.2,
+        "peak_time": "15:00"
       },
       "hourly": [
         {
           "time": "11:00",
-          "temp": 7.0,
-          "humidity": 60,
-          "wind": 2.9,
-          "feel": 5.0,
-          "level": "safe",
-          "filled": false
-        },
-        {
-          "time": "12:00",
           "temp": 8.0,
           "humidity": 55,
-          "wind": 3.5,
-          "feel": 5.8,
-          "level": "safe",
-          "filled": false
-        },
-        {
-          "time": "13:00",
-          "temp": 8.0,
-          "humidity": 50,
           "wind": 4.2,
           "feel": 5.4,
           "level": "safe",
           "filled": false
         },
         {
-          "time": "14:00",
-          "temp": 8.0,
+          "time": "12:00",
+          "temp": 9.0,
           "humidity": 50,
-          "wind": 4.1,
-          "feel": 5.5,
+          "wind": 4.8,
+          "feel": 6.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "13:00",
+          "temp": 9.0,
+          "humidity": 50,
+          "wind": 4.8,
+          "feel": 6.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "14:00",
+          "temp": 9.0,
+          "humidity": 50,
+          "wind": 4.8,
+          "feel": 6.4,
           "level": "safe",
           "filled": false
         },
         {
           "time": "15:00",
           "temp": 8.0,
-          "humidity": 50,
-          "wind": 4.2,
-          "feel": 5.4,
+          "humidity": 45,
+          "wind": 4.6,
+          "feel": 5.2,
           "level": "safe",
           "filled": false
         }
@@ -504,45 +507,46 @@
       "expected_audience": 15000,
       "scale": "large",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 2.1,
+        "peak_feel": 1.9,
         "peak_time": "18:00"
       },
       "hourly": [
         {
           "time": "14:00",
-          "temp": 8.0,
+          "temp": 9.0,
           "humidity": 50,
-          "wind": 4.1,
-          "feel": 5.5,
+          "wind": 4.8,
+          "feel": 6.4,
           "level": "safe",
           "filled": false
         },
         {
           "time": "15:00",
           "temp": 8.0,
-          "humidity": 50,
-          "wind": 4.2,
-          "feel": 5.4,
+          "humidity": 45,
+          "wind": 4.6,
+          "feel": 5.2,
           "level": "safe",
           "filled": false
         },
         {
           "time": "16:00",
-          "temp": 7.0,
+          "temp": 8.0,
           "humidity": 50,
           "wind": 3.9,
-          "feel": 4.4,
+          "feel": 5.6,
           "level": "safe",
           "filled": false
         },
         {
           "time": "17:00",
-          "temp": 6.0,
-          "humidity": 55,
-          "wind": 3.6,
-          "feel": 3.3,
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 3.7,
+          "feel": 4.5,
           "level": "safe",
           "filled": false
         },
@@ -550,8 +554,8 @@
           "time": "18:00",
           "temp": 5.0,
           "humidity": 55,
-          "wind": 3.5,
-          "feel": 2.1,
+          "wind": 3.9,
+          "feel": 1.9,
           "level": "safe",
           "filled": false
         }
@@ -676,45 +680,46 @@
       "expected_audience": 3000,
       "scale": "small",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 2.1,
+        "peak_feel": 1.9,
         "peak_time": "18:00"
       },
       "hourly": [
         {
           "time": "14:00",
-          "temp": 8.0,
+          "temp": 9.0,
           "humidity": 50,
-          "wind": 4.1,
-          "feel": 5.5,
+          "wind": 4.8,
+          "feel": 6.4,
           "level": "safe",
           "filled": false
         },
         {
           "time": "15:00",
           "temp": 8.0,
-          "humidity": 50,
-          "wind": 4.2,
-          "feel": 5.4,
+          "humidity": 45,
+          "wind": 4.6,
+          "feel": 5.2,
           "level": "safe",
           "filled": false
         },
         {
           "time": "16:00",
-          "temp": 7.0,
+          "temp": 8.0,
           "humidity": 50,
           "wind": 3.9,
-          "feel": 4.4,
+          "feel": 5.6,
           "level": "safe",
           "filled": false
         },
         {
           "time": "17:00",
-          "temp": 6.0,
-          "humidity": 55,
-          "wind": 3.6,
-          "feel": 3.3,
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 3.7,
+          "feel": 4.5,
           "level": "safe",
           "filled": false
         },
@@ -722,8 +727,8 @@
           "time": "18:00",
           "temp": 5.0,
           "humidity": 55,
-          "wind": 3.5,
-          "feel": 2.1,
+          "wind": 3.9,
+          "feel": 1.9,
           "level": "safe",
           "filled": false
         }
@@ -848,56 +853,57 @@
       "expected_audience": 1200,
       "scale": "small",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 2.3,
+        "peak_feel": -0.9,
         "peak_time": "10:00"
       },
       "hourly": [
         {
           "time": "10:00",
-          "temp": 2.3,
-          "humidity": 43,
-          "wind": 1.0,
-          "feel": 2.3,
+          "temp": 2.0,
+          "humidity": 50,
+          "wind": 2.8,
+          "feel": -0.9,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "11:00",
-          "temp": 3.7,
-          "humidity": 37,
-          "wind": 1.0,
-          "feel": 3.7,
+          "temp": 4.0,
+          "humidity": 45,
+          "wind": 3.0,
+          "feel": 1.3,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "12:00",
           "temp": 5.0,
-          "humidity": 30,
-          "wind": 1.0,
-          "feel": 5.0,
+          "humidity": 40,
+          "wind": 2.6,
+          "feel": 2.8,
           "level": "safe",
           "filled": false
         },
         {
           "time": "13:00",
-          "temp": 6.3,
-          "humidity": 32,
-          "wind": 1.0,
-          "feel": 6.3,
+          "temp": 6.0,
+          "humidity": 40,
+          "wind": 2.7,
+          "feel": 3.9,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "14:00",
-          "temp": 7.7,
-          "humidity": 33,
-          "wind": 1.0,
-          "feel": 7.7,
+          "temp": 7.0,
+          "humidity": 40,
+          "wind": 2.5,
+          "feel": 5.3,
           "level": "safe",
-          "filled": true
+          "filled": false
         }
       ],
       "parking_full_eta": "13:00",
@@ -1020,56 +1026,57 @@
       "expected_audience": 15000,
       "scale": "large",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 6.3,
+        "peak_feel": 3.9,
         "peak_time": "13:00"
       },
       "hourly": [
         {
           "time": "13:00",
-          "temp": 6.3,
-          "humidity": 32,
-          "wind": 1.0,
-          "feel": 6.3,
+          "temp": 6.0,
+          "humidity": 40,
+          "wind": 2.7,
+          "feel": 3.9,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "14:00",
-          "temp": 7.7,
-          "humidity": 33,
-          "wind": 1.0,
-          "feel": 7.7,
+          "temp": 7.0,
+          "humidity": 40,
+          "wind": 2.5,
+          "feel": 5.3,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "15:00",
-          "temp": 9.0,
-          "humidity": 35,
-          "wind": 1.0,
-          "feel": 9.0,
+          "temp": 7.0,
+          "humidity": 45,
+          "wind": 2.2,
+          "feel": 5.5,
           "level": "safe",
           "filled": false
         },
         {
           "time": "16:00",
-          "temp": 7.7,
-          "humidity": 43,
-          "wind": 1.0,
-          "feel": 7.7,
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 1.3,
+          "feel": 6.5,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "17:00",
-          "temp": 6.3,
-          "humidity": 52,
-          "wind": 1.0,
-          "feel": 6.3,
+          "temp": 6.0,
+          "humidity": 60,
+          "wind": 0.9,
+          "feel": 6.0,
           "level": "safe",
-          "filled": true
+          "filled": false
         }
       ],
       "parking_full_eta": "13:00",
@@ -1192,56 +1199,57 @@
       "expected_audience": 3000,
       "scale": "small",
       "exposed_people": 0,
+      "actual_audience": null,
       "risk": {
         "level": "safe",
-        "peak_feel": 6.3,
+        "peak_feel": 3.9,
         "peak_time": "13:00"
       },
       "hourly": [
         {
           "time": "13:00",
-          "temp": 6.3,
-          "humidity": 32,
-          "wind": 1.0,
-          "feel": 6.3,
+          "temp": 6.0,
+          "humidity": 40,
+          "wind": 2.7,
+          "feel": 3.9,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "14:00",
-          "temp": 7.7,
-          "humidity": 33,
-          "wind": 1.0,
-          "feel": 7.7,
+          "temp": 7.0,
+          "humidity": 40,
+          "wind": 2.5,
+          "feel": 5.3,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "15:00",
-          "temp": 9.0,
-          "humidity": 35,
-          "wind": 1.0,
-          "feel": 9.0,
+          "temp": 7.0,
+          "humidity": 45,
+          "wind": 2.2,
+          "feel": 5.5,
           "level": "safe",
           "filled": false
         },
         {
           "time": "16:00",
-          "temp": 7.7,
-          "humidity": 43,
-          "wind": 1.0,
-          "feel": 7.7,
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 1.3,
+          "feel": 6.5,
           "level": "safe",
-          "filled": true
+          "filled": false
         },
         {
           "time": "17:00",
-          "temp": 6.3,
-          "humidity": 52,
-          "wind": 1.0,
-          "feel": 6.3,
+          "temp": 6.0,
+          "humidity": 60,
+          "wind": 0.9,
+          "feel": 6.0,
           "level": "safe",
-          "filled": true
+          "filled": false
         }
       ],
       "parking_full_eta": null,
