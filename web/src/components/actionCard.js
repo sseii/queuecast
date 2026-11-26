@@ -1,7 +1,7 @@
 // 관객 안내(한·영)와 공단·주최사 대응 체크리스트 (#8)
 //  - 관객 안내: actions.json [계절][단계].audience + 가장 가까운 실내 쉼터
 //  - 공단·주최사 대응은 orgGuide.js
-import { esc, fillTemplate, fmtPeople } from "../util.js";
+import { esc, fillTemplate, scaleOf, levelOf } from "../util.js";
 import { t, lang } from "../i18n.js";
 import { nearest, fmtDist, mapUrl } from "./facilities.js";
 import { icon } from "./icons.js";
@@ -11,18 +11,19 @@ function entry(actions, show) {
 }
 
 export function audienceCard(actions, show) {
-  const level = show.risk?.level ?? "safe";
+  const level = levelOf(show);
   const e = entry(actions, show);
-  const safe = level === "safe" || !e;
+  const pending = level === "pending";
+  const safe = !pending && (level === "safe" || !e);
   // 영어 화면이거나 해외 팬이 많은 공연이면 영어 안내를 먼저
   const order = lang() === "en" || show.foreign_audience ? ["en", "ko"] : ["ko", "en"];
   const tabLabel = { ko: "한국어", en: "English" };
   const [shelter] = nearest(show, "실내 쉼터");
 
   const body = (l) => `
-      <p class="notice-text">${safe ? t("aud.safe", {}, l) : fillTemplate(e.audience[l], show, l)}</p>
-      ${!safe && shelter ? shelterBox(shelter, show, l) : ""}
-      ${safe ? "" : `<button type="button" class="text-btn" data-copy="${l}">${t("aud.copy", {}, l)}</button>`}`;
+      <p class="notice-text">${pending ? t("aud.pending", {}, l) : safe ? t("aud.safe", {}, l) : fillTemplate(e.audience[l], show, l)}</p>
+      ${!safe && !pending && shelter ? shelterBox(shelter, show, l) : ""}
+      ${safe || pending ? "" : `<button type="button" class="text-btn" data-copy="${l}">${t("aud.copy", {}, l)}</button>`}`;
 
   return `
   <section class="block audience" data-tabs>
@@ -52,16 +53,13 @@ function shelterBox(f, show, l) {
     : `<div class="shelter">${inner}</div>`;
 }
 
-// 관객 규모 추가 조치: actions.json scale 중 예상 관객 수가 넘는 구간을 작은 구간부터 모두
-//  (1만 명이면 5천 명 이상 조치 + 1만 명 이상 조치)
+// 대기 규모 추가 조치: actions.json scale 의 medium·large. 대(large)면 중+대 조치를 모두, 중이면 중만, 소는 없음
 export function scaleTier(actions, show) {
-  const n = show.expected_audience;
-  if (n == null || !actions?.scale) return null;
-  const tiers = Object.values(actions.scale)
-    .filter((s) => n >= s.min_audience)
-    .sort((a, b) => a.min_audience - b.min_audience);
-  if (!tiers.length) return null;
-  return { label: tiers[tiers.length - 1].label, org: tiers.flatMap((s) => s.org) };
+  const sc = scaleOf(show);
+  if (!actions?.scale || !sc || sc === "small") return null;
+  const keys = sc === "large" ? ["medium", "large"] : ["medium"];
+  const org = keys.flatMap((k) => actions.scale[k]?.org ?? []);
+  return org.length ? { org } : null;
 }
 
 

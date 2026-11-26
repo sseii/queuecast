@@ -9,6 +9,7 @@ const TYPES = [
   { key: "화장실", icon: icon.restroom(24) },
   { key: "음수대", icon: icon.water(24) },
   { key: "자판기", icon: icon.cup(24) },
+  { key: "간이편의점", icon: icon.store(24), optional: true },
 ];
 
 export function fmtDist(m) {
