@@ -1,8 +1,9 @@
 {
-  "generated_at": "2026-11-25T15:07:51+09:00",
-  "weather_base": "2026-11-25T14:00:00+09:00",
+  "generated_at": "2026-11-26T00:02:45+09:00",
+  "weather_base": "2026-11-25T23:00:00+09:00",
   "weather_source": "기상청 단기예보 (격자 nx=62, ny=126 송파구)",
   "show_source": "KOPIS 공연목록",
+  "stale": false,
   "shows": [
     {
       "id": "PF301499",
@@ -19,7 +20,9 @@
       },
       "season": "winter",
       "forecast_available": true,
-      "expected_audience": null,
+      "data_status": "ok",
+      "expected_audience": 15000,
+      "scale": "large",
       "exposed_people": 0,
       "risk": {
         "level": "safe",
@@ -29,11 +32,12 @@
       "hourly": [
         {
           "time": "17:00",
-          "temp": 15.0,
+          "temp": 14.0,
           "humidity": 80,
-          "wind": 2.5,
-          "feel": 15.0,
-          "level": "safe"
+          "wind": 2.9,
+          "feel": 14.0,
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "18:00",
@@ -41,20 +45,119 @@
           "humidity": 85,
           "wind": 2.1,
           "feel": 13.0,
-          "level": "safe"
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "19:00",
           "temp": 12.0,
           "humidity": 85,
-          "wind": 2.0,
+          "wind": 2.1,
           "feel": 12.0,
-          "level": "safe"
+          "level": "safe",
+          "filled": false
         }
       ],
       "parking_full_eta": null,
       "recommended_arrival": "17:00",
-      "facilities": []
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 328
+        },
+        {
+          "type": "음수대",
+          "place": "까치다리",
+          "detail": "북2문 부근",
+          "lat": 37.522562,
+          "lng": 127.126779,
+          "distance_m": 366
+        },
+        {
+          "type": "음수대",
+          "place": "청룡교",
+          "detail": "북2문 앞",
+          "lat": 37.522596,
+          "lng": 127.126762,
+          "distance_m": 370
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-3게이트 내부",
+          "lat": 37.519598,
+          "lng": 127.126782,
+          "distance_m": 42
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 68
+        },
+        {
+          "type": "화장실",
+          "place": "88마당",
+          "detail": "수영경기장 근처",
+          "lat": 37.520272,
+          "lng": 127.126117,
+          "distance_m": 137
+        },
+        {
+          "type": "자판기",
+          "place": "88마당",
+          "detail": "체조경기장2-2게이트 방향",
+          "lat": 37.518982,
+          "lng": 127.12627,
+          "distance_m": 73
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽수영경기장",
+          "detail": "",
+          "lat": 37.519968,
+          "lng": 127.126092,
+          "distance_m": 112
+        },
+        {
+          "type": "자판기",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-3게이트 앞",
+          "lat": 37.517897,
+          "lng": 127.126388,
+          "distance_m": 163
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 148
+        },
+        {
+          "type": "간이편의점",
+          "place": "88호수수변무대",
+          "detail": "",
+          "lat": 37.520605,
+          "lng": 127.12561,
+          "distance_m": 193
+        },
+        {
+          "type": "간이편의점",
+          "place": "백제집자리전시관",
+          "detail": "",
+          "lat": 37.520716,
+          "lng": 127.125305,
+          "distance_m": 220
+        }
+      ]
     },
     {
       "id": "PF302131",
@@ -71,7 +174,9 @@
       },
       "season": "winter",
       "forecast_available": true,
-      "expected_audience": null,
+      "data_status": "ok",
+      "expected_audience": 3000,
+      "scale": "small",
       "exposed_people": 0,
       "risk": {
         "level": "safe",
@@ -85,72 +190,128 @@
           "humidity": 85,
           "wind": 2.1,
           "feel": 13.0,
-          "level": "safe"
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "19:00",
           "temp": 12.0,
           "humidity": 85,
-          "wind": 2.0,
+          "wind": 2.1,
           "feel": 12.0,
-          "level": "safe"
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "20:00",
           "temp": 12.0,
           "humidity": 85,
-          "wind": 2.0,
+          "wind": 1.9,
           "feel": 12.0,
-          "level": "safe"
+          "level": "safe",
+          "filled": false
         }
       ],
       "parking_full_eta": null,
       "recommended_arrival": "18:00",
-      "facilities": []
-    },
-    {
-      "id": "PF286543",
-      "title": "백 번째 리뷰",
-      "genre": "연극",
-      "venue": "기타",
-      "date": "2026-11-28",
-      "start_time": "15:00",
-      "day_type": "weekend",
-      "foreign_audience": null,
-      "wait_window": {
-        "start": "11:00",
-        "end": "15:00"
-      },
-      "season": "winter",
-      "forecast_available": true,
-      "expected_audience": null,
-      "exposed_people": 0,
-      "risk": {
-        "level": "safe",
-        "peak_feel": 6.8,
-        "peak_time": "15:00"
-      },
-      "hourly": [
+      "facilities": [
         {
-          "time": "12:00",
-          "temp": 8.0,
-          "humidity": 55,
-          "wind": 1.0,
-          "feel": 8.0,
-          "level": "safe"
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 321
         },
         {
-          "time": "15:00",
-          "temp": 8.0,
-          "humidity": 50,
-          "wind": 2.0,
-          "feel": 6.8,
-          "level": "safe"
+          "type": "음수대",
+          "place": "야생화학습장",
+          "detail": "배드민턴장",
+          "lat": 37.51779,
+          "lng": 127.121585,
+          "distance_m": 568
+        },
+        {
+          "type": "음수대",
+          "place": "조각공원",
+          "detail": "",
+          "lat": 37.516695,
+          "lng": 127.120899,
+          "distance_m": 573
+        },
+        {
+          "type": "화장실",
+          "place": "실내테니스장",
+          "detail": "실내 테니스장 근처",
+          "lat": 37.514078,
+          "lng": 127.127641,
+          "distance_m": 129
+        },
+        {
+          "type": "화장실",
+          "place": "만남의광장",
+          "detail": "제일제면소 건물 뒤쪽",
+          "lat": 37.516936,
+          "lng": 127.128278,
+          "distance_m": 224
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 391
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽홀(뮤즈라이브)",
+          "detail": "ticket box 근처",
+          "lat": 37.515388,
+          "lng": 127.127135,
+          "distance_m": 26
+        },
+        {
+          "type": "자판기",
+          "place": "3대3농구장",
+          "detail": "",
+          "lat": 37.516109,
+          "lng": 127.128331,
+          "distance_m": 152
+        },
+        {
+          "type": "자판기",
+          "place": "장미광장",
+          "detail": "광장 근처",
+          "lat": 37.512786,
+          "lng": 127.127032,
+          "distance_m": 263
+        },
+        {
+          "type": "간이편의점",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.516403,
+          "lng": 127.130016,
+          "distance_m": 292
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 317
+        },
+        {
+          "type": "간이편의점",
+          "place": "88마당",
+          "detail": "우리금융아트홀 방향",
+          "lat": 37.517714,
+          "lng": 127.124847,
+          "distance_m": 347
         }
-      ],
-      "parking_full_eta": null,
-      "recommended_arrival": "11:00",
-      "facilities": []
+      ]
     },
     {
       "id": "PF293285",
@@ -167,34 +328,162 @@
       },
       "season": "winter",
       "forecast_available": true,
-      "expected_audience": null,
+      "data_status": "ok",
+      "expected_audience": 1200,
+      "scale": "small",
       "exposed_people": 0,
       "risk": {
         "level": "safe",
-        "peak_feel": 6.8,
-        "peak_time": "15:00"
+        "peak_feel": 5.0,
+        "peak_time": "11:00"
       },
       "hourly": [
+        {
+          "time": "11:00",
+          "temp": 7.0,
+          "humidity": 60,
+          "wind": 2.9,
+          "feel": 5.0,
+          "level": "safe",
+          "filled": false
+        },
         {
           "time": "12:00",
           "temp": 8.0,
           "humidity": 55,
-          "wind": 1.0,
-          "feel": 8.0,
-          "level": "safe"
+          "wind": 3.5,
+          "feel": 5.8,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "13:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 4.2,
+          "feel": 5.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "14:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 4.1,
+          "feel": 5.5,
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "15:00",
           "temp": 8.0,
           "humidity": 50,
-          "wind": 2.0,
-          "feel": 6.8,
-          "level": "safe"
+          "wind": 4.2,
+          "feel": 5.4,
+          "level": "safe",
+          "filled": false
         }
       ],
-      "parking_full_eta": null,
+      "parking_full_eta": "13:00",
       "recommended_arrival": "11:00",
-      "facilities": []
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "야생화학습장",
+          "detail": "배드민턴장",
+          "lat": 37.51779,
+          "lng": 127.121585,
+          "distance_m": 305
+        },
+        {
+          "type": "음수대",
+          "place": "조각공원",
+          "detail": "",
+          "lat": 37.516695,
+          "lng": 127.120899,
+          "distance_m": 374
+        },
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 411
+        },
+        {
+          "type": "화장실",
+          "place": "88마당",
+          "detail": "야생화학습장 가는길",
+          "lat": 37.51878,
+          "lng": 127.123452,
+          "distance_m": 201
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 227
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-3게이트 내부",
+          "lat": 37.519598,
+          "lng": 127.126782,
+          "distance_m": 283
+        },
+        {
+          "type": "자판기",
+          "place": "우리금융아트홀(올림픽역도경기장)",
+          "detail": "아트홀 근처",
+          "lat": 37.517494,
+          "lng": 127.125081,
+          "distance_m": 6
+        },
+        {
+          "type": "자판기",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-3게이트 앞",
+          "lat": 37.517897,
+          "lng": 127.126388,
+          "distance_m": 130
+        },
+        {
+          "type": "자판기",
+          "place": "88마당",
+          "detail": "놀이시설 앞",
+          "lat": 37.517988,
+          "lng": 127.123632,
+          "distance_m": 136
+        },
+        {
+          "type": "간이편의점",
+          "place": "88마당",
+          "detail": "우리금융아트홀 방향",
+          "lat": 37.517714,
+          "lng": 127.124847,
+          "distance_m": 32
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 152
+        },
+        {
+          "type": "간이편의점",
+          "place": "88호수수변무대",
+          "detail": "",
+          "lat": 37.520605,
+          "lng": 127.12561,
+          "distance_m": 353
+        }
+      ]
     },
     {
       "id": "PF301499",
@@ -211,34 +500,162 @@
       },
       "season": "winter",
       "forecast_available": true,
-      "expected_audience": null,
+      "data_status": "ok",
+      "expected_audience": 15000,
+      "scale": "large",
       "exposed_people": 0,
       "risk": {
         "level": "safe",
-        "peak_feel": 3.4,
+        "peak_feel": 2.1,
         "peak_time": "18:00"
       },
       "hourly": [
         {
+          "time": "14:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 4.1,
+          "feel": 5.5,
+          "level": "safe",
+          "filled": false
+        },
+        {
           "time": "15:00",
           "temp": 8.0,
           "humidity": 50,
-          "wind": 2.0,
-          "feel": 6.8,
-          "level": "safe"
+          "wind": 4.2,
+          "feel": 5.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "16:00",
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 3.9,
+          "feel": 4.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "17:00",
+          "temp": 6.0,
+          "humidity": 55,
+          "wind": 3.6,
+          "feel": 3.3,
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "18:00",
           "temp": 5.0,
           "humidity": 55,
-          "wind": 2.0,
-          "feel": 3.4,
-          "level": "safe"
+          "wind": 3.5,
+          "feel": 2.1,
+          "level": "safe",
+          "filled": false
         }
       ],
-      "parking_full_eta": null,
+      "parking_full_eta": "13:00",
       "recommended_arrival": "14:00",
-      "facilities": []
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 328
+        },
+        {
+          "type": "음수대",
+          "place": "까치다리",
+          "detail": "북2문 부근",
+          "lat": 37.522562,
+          "lng": 127.126779,
+          "distance_m": 366
+        },
+        {
+          "type": "음수대",
+          "place": "청룡교",
+          "detail": "북2문 앞",
+          "lat": 37.522596,
+          "lng": 127.126762,
+          "distance_m": 370
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-3게이트 내부",
+          "lat": 37.519598,
+          "lng": 127.126782,
+          "distance_m": 42
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 68
+        },
+        {
+          "type": "화장실",
+          "place": "88마당",
+          "detail": "수영경기장 근처",
+          "lat": 37.520272,
+          "lng": 127.126117,
+          "distance_m": 137
+        },
+        {
+          "type": "자판기",
+          "place": "88마당",
+          "detail": "체조경기장2-2게이트 방향",
+          "lat": 37.518982,
+          "lng": 127.12627,
+          "distance_m": 73
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽수영경기장",
+          "detail": "",
+          "lat": 37.519968,
+          "lng": 127.126092,
+          "distance_m": 112
+        },
+        {
+          "type": "자판기",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-3게이트 앞",
+          "lat": 37.517897,
+          "lng": 127.126388,
+          "distance_m": 163
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 148
+        },
+        {
+          "type": "간이편의점",
+          "place": "88호수수변무대",
+          "detail": "",
+          "lat": 37.520605,
+          "lng": 127.12561,
+          "distance_m": 193
+        },
+        {
+          "type": "간이편의점",
+          "place": "백제집자리전시관",
+          "detail": "",
+          "lat": 37.520716,
+          "lng": 127.125305,
+          "distance_m": 220
+        }
+      ]
     },
     {
       "id": "PF302131",
@@ -255,34 +672,678 @@
       },
       "season": "winter",
       "forecast_available": true,
-      "expected_audience": null,
+      "data_status": "ok",
+      "expected_audience": 3000,
+      "scale": "small",
       "exposed_people": 0,
       "risk": {
         "level": "safe",
-        "peak_feel": 3.4,
+        "peak_feel": 2.1,
         "peak_time": "18:00"
       },
       "hourly": [
         {
+          "time": "14:00",
+          "temp": 8.0,
+          "humidity": 50,
+          "wind": 4.1,
+          "feel": 5.5,
+          "level": "safe",
+          "filled": false
+        },
+        {
           "time": "15:00",
           "temp": 8.0,
           "humidity": 50,
-          "wind": 2.0,
-          "feel": 6.8,
-          "level": "safe"
+          "wind": 4.2,
+          "feel": 5.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "16:00",
+          "temp": 7.0,
+          "humidity": 50,
+          "wind": 3.9,
+          "feel": 4.4,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "17:00",
+          "temp": 6.0,
+          "humidity": 55,
+          "wind": 3.6,
+          "feel": 3.3,
+          "level": "safe",
+          "filled": false
         },
         {
           "time": "18:00",
           "temp": 5.0,
           "humidity": 55,
-          "wind": 2.0,
-          "feel": 3.4,
-          "level": "safe"
+          "wind": 3.5,
+          "feel": 2.1,
+          "level": "safe",
+          "filled": false
         }
       ],
       "parking_full_eta": null,
       "recommended_arrival": "14:00",
-      "facilities": []
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 321
+        },
+        {
+          "type": "음수대",
+          "place": "야생화학습장",
+          "detail": "배드민턴장",
+          "lat": 37.51779,
+          "lng": 127.121585,
+          "distance_m": 568
+        },
+        {
+          "type": "음수대",
+          "place": "조각공원",
+          "detail": "",
+          "lat": 37.516695,
+          "lng": 127.120899,
+          "distance_m": 573
+        },
+        {
+          "type": "화장실",
+          "place": "실내테니스장",
+          "detail": "실내 테니스장 근처",
+          "lat": 37.514078,
+          "lng": 127.127641,
+          "distance_m": 129
+        },
+        {
+          "type": "화장실",
+          "place": "만남의광장",
+          "detail": "제일제면소 건물 뒤쪽",
+          "lat": 37.516936,
+          "lng": 127.128278,
+          "distance_m": 224
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 391
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽홀(뮤즈라이브)",
+          "detail": "ticket box 근처",
+          "lat": 37.515388,
+          "lng": 127.127135,
+          "distance_m": 26
+        },
+        {
+          "type": "자판기",
+          "place": "3대3농구장",
+          "detail": "",
+          "lat": 37.516109,
+          "lng": 127.128331,
+          "distance_m": 152
+        },
+        {
+          "type": "자판기",
+          "place": "장미광장",
+          "detail": "광장 근처",
+          "lat": 37.512786,
+          "lng": 127.127032,
+          "distance_m": 263
+        },
+        {
+          "type": "간이편의점",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.516403,
+          "lng": 127.130016,
+          "distance_m": 292
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 317
+        },
+        {
+          "type": "간이편의점",
+          "place": "88마당",
+          "detail": "우리금융아트홀 방향",
+          "lat": 37.517714,
+          "lng": 127.124847,
+          "distance_m": 347
+        }
+      ]
+    },
+    {
+      "id": "PF293285",
+      "title": "최현우 30주년 기념 공연: LEGACY",
+      "genre": "서커스/마술",
+      "venue": "우리금융아트홀",
+      "date": "2026-11-29",
+      "start_time": "14:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "10:00",
+        "end": "14:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "data_status": "ok",
+      "expected_audience": 1200,
+      "scale": "small",
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 2.3,
+        "peak_time": "10:00"
+      },
+      "hourly": [
+        {
+          "time": "10:00",
+          "temp": 2.3,
+          "humidity": 43,
+          "wind": 1.0,
+          "feel": 2.3,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "11:00",
+          "temp": 3.7,
+          "humidity": 37,
+          "wind": 1.0,
+          "feel": 3.7,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "12:00",
+          "temp": 5.0,
+          "humidity": 30,
+          "wind": 1.0,
+          "feel": 5.0,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "13:00",
+          "temp": 6.3,
+          "humidity": 32,
+          "wind": 1.0,
+          "feel": 6.3,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "14:00",
+          "temp": 7.7,
+          "humidity": 33,
+          "wind": 1.0,
+          "feel": 7.7,
+          "level": "safe",
+          "filled": true
+        }
+      ],
+      "parking_full_eta": "13:00",
+      "recommended_arrival": "10:00",
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "야생화학습장",
+          "detail": "배드민턴장",
+          "lat": 37.51779,
+          "lng": 127.121585,
+          "distance_m": 305
+        },
+        {
+          "type": "음수대",
+          "place": "조각공원",
+          "detail": "",
+          "lat": 37.516695,
+          "lng": 127.120899,
+          "distance_m": 374
+        },
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 411
+        },
+        {
+          "type": "화장실",
+          "place": "88마당",
+          "detail": "야생화학습장 가는길",
+          "lat": 37.51878,
+          "lng": 127.123452,
+          "distance_m": 201
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 227
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-3게이트 내부",
+          "lat": 37.519598,
+          "lng": 127.126782,
+          "distance_m": 283
+        },
+        {
+          "type": "자판기",
+          "place": "우리금융아트홀(올림픽역도경기장)",
+          "detail": "아트홀 근처",
+          "lat": 37.517494,
+          "lng": 127.125081,
+          "distance_m": 6
+        },
+        {
+          "type": "자판기",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-3게이트 앞",
+          "lat": 37.517897,
+          "lng": 127.126388,
+          "distance_m": 130
+        },
+        {
+          "type": "자판기",
+          "place": "88마당",
+          "detail": "놀이시설 앞",
+          "lat": 37.517988,
+          "lng": 127.123632,
+          "distance_m": 136
+        },
+        {
+          "type": "간이편의점",
+          "place": "88마당",
+          "detail": "우리금융아트홀 방향",
+          "lat": 37.517714,
+          "lng": 127.124847,
+          "distance_m": 32
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 152
+        },
+        {
+          "type": "간이편의점",
+          "place": "88호수수변무대",
+          "detail": "",
+          "lat": 37.520605,
+          "lng": 127.12561,
+          "distance_m": 353
+        }
+      ]
+    },
+    {
+      "id": "PF301499",
+      "title": "조용필 & 위대한 탄생 전국투어 콘서트 [서울]",
+      "genre": "대중음악",
+      "venue": "KSPO DOME",
+      "date": "2026-11-29",
+      "start_time": "17:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "13:00",
+        "end": "17:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "data_status": "ok",
+      "expected_audience": 15000,
+      "scale": "large",
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 6.3,
+        "peak_time": "13:00"
+      },
+      "hourly": [
+        {
+          "time": "13:00",
+          "temp": 6.3,
+          "humidity": 32,
+          "wind": 1.0,
+          "feel": 6.3,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "14:00",
+          "temp": 7.7,
+          "humidity": 33,
+          "wind": 1.0,
+          "feel": 7.7,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "15:00",
+          "temp": 9.0,
+          "humidity": 35,
+          "wind": 1.0,
+          "feel": 9.0,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "16:00",
+          "temp": 7.7,
+          "humidity": 43,
+          "wind": 1.0,
+          "feel": 7.7,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "17:00",
+          "temp": 6.3,
+          "humidity": 52,
+          "wind": 1.0,
+          "feel": 6.3,
+          "level": "safe",
+          "filled": true
+        }
+      ],
+      "parking_full_eta": "13:00",
+      "recommended_arrival": "13:00",
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 328
+        },
+        {
+          "type": "음수대",
+          "place": "까치다리",
+          "detail": "북2문 부근",
+          "lat": 37.522562,
+          "lng": 127.126779,
+          "distance_m": 366
+        },
+        {
+          "type": "음수대",
+          "place": "청룡교",
+          "detail": "북2문 앞",
+          "lat": 37.522596,
+          "lng": 127.126762,
+          "distance_m": 370
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-3게이트 내부",
+          "lat": 37.519598,
+          "lng": 127.126782,
+          "distance_m": 42
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 68
+        },
+        {
+          "type": "화장실",
+          "place": "88마당",
+          "detail": "수영경기장 근처",
+          "lat": 37.520272,
+          "lng": 127.126117,
+          "distance_m": 137
+        },
+        {
+          "type": "자판기",
+          "place": "88마당",
+          "detail": "체조경기장2-2게이트 방향",
+          "lat": 37.518982,
+          "lng": 127.12627,
+          "distance_m": 73
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽수영경기장",
+          "detail": "",
+          "lat": 37.519968,
+          "lng": 127.126092,
+          "distance_m": 112
+        },
+        {
+          "type": "자판기",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-3게이트 앞",
+          "lat": 37.517897,
+          "lng": 127.126388,
+          "distance_m": 163
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 148
+        },
+        {
+          "type": "간이편의점",
+          "place": "88호수수변무대",
+          "detail": "",
+          "lat": 37.520605,
+          "lng": 127.12561,
+          "distance_m": 193
+        },
+        {
+          "type": "간이편의점",
+          "place": "백제집자리전시관",
+          "detail": "",
+          "lat": 37.520716,
+          "lng": 127.125305,
+          "distance_m": 220
+        }
+      ]
+    },
+    {
+      "id": "PF302131",
+      "title": "다이나믹 듀오 단독 콘서트: 가끔씩 오래 보자 [서울]",
+      "genre": "대중음악",
+      "venue": "올림픽홀",
+      "date": "2026-11-29",
+      "start_time": "17:00",
+      "day_type": "weekend",
+      "foreign_audience": null,
+      "wait_window": {
+        "start": "13:00",
+        "end": "17:00"
+      },
+      "season": "winter",
+      "forecast_available": true,
+      "data_status": "ok",
+      "expected_audience": 3000,
+      "scale": "small",
+      "exposed_people": 0,
+      "risk": {
+        "level": "safe",
+        "peak_feel": 6.3,
+        "peak_time": "13:00"
+      },
+      "hourly": [
+        {
+          "time": "13:00",
+          "temp": 6.3,
+          "humidity": 32,
+          "wind": 1.0,
+          "feel": 6.3,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "14:00",
+          "temp": 7.7,
+          "humidity": 33,
+          "wind": 1.0,
+          "feel": 7.7,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "15:00",
+          "temp": 9.0,
+          "humidity": 35,
+          "wind": 1.0,
+          "feel": 9.0,
+          "level": "safe",
+          "filled": false
+        },
+        {
+          "time": "16:00",
+          "temp": 7.7,
+          "humidity": 43,
+          "wind": 1.0,
+          "feel": 7.7,
+          "level": "safe",
+          "filled": true
+        },
+        {
+          "time": "17:00",
+          "temp": 6.3,
+          "humidity": 52,
+          "wind": 1.0,
+          "feel": 6.3,
+          "level": "safe",
+          "filled": true
+        }
+      ],
+      "parking_full_eta": null,
+      "recommended_arrival": "13:00",
+      "facilities": [
+        {
+          "type": "음수대",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.517199,
+          "lng": 127.129668,
+          "distance_m": 321
+        },
+        {
+          "type": "음수대",
+          "place": "야생화학습장",
+          "detail": "배드민턴장",
+          "lat": 37.51779,
+          "lng": 127.121585,
+          "distance_m": 568
+        },
+        {
+          "type": "음수대",
+          "place": "조각공원",
+          "detail": "",
+          "lat": 37.516695,
+          "lng": 127.120899,
+          "distance_m": 573
+        },
+        {
+          "type": "화장실",
+          "place": "실내테니스장",
+          "detail": "실내 테니스장 근처",
+          "lat": 37.514078,
+          "lng": 127.127641,
+          "distance_m": 129
+        },
+        {
+          "type": "화장실",
+          "place": "만남의광장",
+          "detail": "제일제면소 건물 뒤쪽",
+          "lat": 37.516936,
+          "lng": 127.128278,
+          "distance_m": 224
+        },
+        {
+          "type": "화장실",
+          "place": "KSPO DOME(올림픽 체조경기장)",
+          "detail": "2-1 게이트 내부",
+          "lat": 37.518666,
+          "lng": 127.127104,
+          "distance_m": 391
+        },
+        {
+          "type": "자판기",
+          "place": "올림픽홀(뮤즈라이브)",
+          "detail": "ticket box 근처",
+          "lat": 37.515388,
+          "lng": 127.127135,
+          "distance_m": 26
+        },
+        {
+          "type": "자판기",
+          "place": "3대3농구장",
+          "detail": "",
+          "lat": 37.516109,
+          "lng": 127.128331,
+          "distance_m": 152
+        },
+        {
+          "type": "자판기",
+          "place": "장미광장",
+          "detail": "광장 근처",
+          "lat": 37.512786,
+          "lng": 127.127032,
+          "distance_m": 263
+        },
+        {
+          "type": "간이편의점",
+          "place": "만남의광장",
+          "detail": "",
+          "lat": 37.516403,
+          "lng": 127.130016,
+          "distance_m": 292
+        },
+        {
+          "type": "간이편의점",
+          "place": "SK핸드볼경기장(올림픽펜싱경기장)",
+          "detail": "2-4게이트 앞",
+          "lat": 37.51798,
+          "lng": 127.126616,
+          "distance_m": 317
+        },
+        {
+          "type": "간이편의점",
+          "place": "88마당",
+          "detail": "우리금융아트홀 방향",
+          "lat": 37.517714,
+          "lng": 127.124847,
+          "distance_m": 347
+        }
+      ]
     }
   ]
 }

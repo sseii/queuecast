@@ -6,23 +6,30 @@
 엔진은 숫자와 단계만 쓴다. 문구는 web/public/data/actions.json 에만 둔다.
 """
 import json
+import math
 import os
 import re
 import sys
+import tempfile
 import time
 from datetime import date as Date, datetime, timedelta
 
 import feel
 import kma
 import kopis
-from common import KST, ApiError, now_kst
+from common import KST, ApiError, get, now_kst
 
 DAYS_AHEAD = 3
 WAIT_HOURS = {"weekend": 4, "weekday": 2}   # 야외 대기 시작: 공연 시작 몇 시간 전부터 (분석 결과)
 LATE_ARRIVAL_MIN = 90                       # caution 이상이면 공연 시작 90분 전 도착 권장
 
-# 2025 연계 공연관람객수 기준, 팀장 분석값으로 채운다
-VENUE_AUDIENCE = {"KSPO DOME": None, "올림픽홀": None, "핸드볼경기장": None, "우리금융아트홀": None, "기타": None}
+# 예정 공연은 실제 관객 수를 알 수 없어 공연장 객석 수를 쓴다 (docs/JSON_형식.md, 11/25 합의)
+VENUE_AUDIENCE = {"KSPO DOME": 15000, "핸드볼경기장": 6500, "올림픽홀": 3000, "우리금융아트홀": 1200, "기타": None}
+SCALE_LARGE, SCALE_MEDIUM = 10000, 5000     # 이상이면 large, medium, 그 아래 small
+KOPIS_GAP_S = 0.3                           # KOPIS 호출 사이 최소 간격(초)
+PARK = "올림픽공원"
+MAIN_VENUES = ("KSPO DOME", "핸드볼경기장", "올림픽홀", "우리금융아트홀")
+MAX_FILL_GAP_H = 6                         # 보간할 때 앞뒤 값을 찾는 최대 거리 (단기예보 4일째는 3시간 간격)
 
 # 공휴일 (대체공휴일 포함)
 HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08", "2027-02-09", "2027-03-01"}
@@ -30,6 +37,11 @@ HOLIDAYS = {"2026-12-25", "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08"
 WEATHER_SOURCE = f"기상청 단기예보 (격자 nx={kma.NX}, ny={kma.NY} 송파구)"
 SHOW_SOURCE = "KOPIS 공연목록"
 OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "web", "public", "data", "forecast.json")
+
+ANALYSIS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "analysis")
+FACILITY_TYPES = ("음수대", "화장실", "자판기", "간이편의점")
+FACILITY_PER_TYPE = 3
+_analysis_cache = {}
 
 WEEKDAYS = "월화수목금토일"
 _SEGMENT = re.compile(r"([^()]*)\(([^)]*)\)")
@@ -100,25 +112,114 @@ def parsable(dtguidance):
     return False
 
 
+def scale(audience):
+    """예상 대기 규모: 1만 이상 large, 5천 이상 medium, 그 아래 small, 모르면 None."""
+    if audience is None:
+        return None
+    if audience >= SCALE_LARGE:
+        return "large"
+    if audience >= SCALE_MEDIUM:
+        return "medium"
+    return "small"
+
+
+def _analysis(name):
+    """analysis/ 의 팀장 분석 JSON. 없거나 깨졌으면 빈 dict (해당 필드는 null·[])."""
+    if name not in _analysis_cache:
+        try:
+            with open(os.path.join(ANALYSIS_DIR, name), encoding="utf-8") as f:
+                _analysis_cache[name] = json.load(f)
+        except (OSError, ValueError):
+            _log(f"analysis/{name} 을 읽지 못해 빈 값으로 둡니다")
+            _analysis_cache[name] = {}
+    return _analysis_cache[name]
+
+
+def parking_eta(venue, dt_type, table=None):
+    """analysis/parking_full_eta.json 의 [venue][day_type]["eta"]. 없거나 null이면 None."""
+    table = _analysis("parking_full_eta.json") if table is None else table
+    return ((table.get(venue) or {}).get(dt_type) or {}).get("eta") or None
+
+
+def haversine_m(lat1, lng1, lat2, lng2):
+    r = 6371000.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp, dl = p2 - p1, math.radians(lng2 - lng1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def nearest_facilities(venue, data=None):
+    """공연장 좌표 기준 직선거리로 종류별 가까운 3개씩. 좌표가 없는 공연장(기타)은 []."""
+    data = _analysis("facilities.json") if data is None else data
+    c = (data.get("venues") or {}).get(venue)
+    if not c:
+        return []
+    out = []
+    for t in FACILITY_TYPES:
+        near = sorted(((haversine_m(c["lat"], c["lng"], f["lat"], f["lng"]), f)
+                       for f in data.get("facilities") or []
+                       if f.get("type") == t and f.get("lat") is not None and f.get("lng") is not None),
+                      key=lambda x: x[0])[:FACILITY_PER_TYPE]
+        out += [{"type": t, "place": f.get("place"), "detail": f.get("detail"), "lat": f["lat"], "lng": f["lng"],
+                 "distance_m": int(round(dist))} for dist, f in near]
+    return out
+
+
 def _hm(dt):
     return dt.strftime("%H:%M")
 
 
 def _hourly(start_dt, wait_dt, season, weather):
-    """대기 시작 정시 ~ 공연 시작 정시, 단기예보에 있는 시각만."""
-    rows = []
+    """대기 시작 정시 ~ 공연 시작 정시. 빈 정시는 앞뒤 값으로 선형 보간(filled=true).
+    (행 목록, 못 채운 시각 수)를 돌려준다."""
+    rows, missing = [], 0
     t = wait_dt.replace(minute=0)
     end = start_dt.replace(minute=0)
     while t <= end:
-        v = (weather.get(t.date().isoformat()) or {}).get(_hm(t))
-        if v is not None:
+        v, filled = _slot(weather, t), False
+        if v is None or v.get("temp") is None:
+            v = _interpolate(weather, t)
+            filled = v is not None
+        if v is None:
+            missing += 1
+        else:
             f = feel.feel(v.get("temp"), v.get("humidity"), v.get("wind"), season)
+            if f is None:
+                missing += 1
             hum = v.get("humidity")
             rows.append({"time": _hm(t), "temp": v.get("temp"),
                          "humidity": int(round(hum)) if hum is not None else None,
-                         "wind": v.get("wind"), "feel": f, "level": feel.level(f, season)})
+                         "wind": v.get("wind"), "feel": f, "level": feel.level(f, season), "filled": filled})
         t += timedelta(hours=1)
-    return rows
+    return rows, missing
+
+
+def _slot(weather, t):
+    return (weather.get(t.date().isoformat()) or {}).get(_hm(t))
+
+
+def _neighbor(weather, t, step):
+    """t에서 step(+1/-1)시간 방향으로 기온이 있는 가장 가까운 정시 (거리, 값)."""
+    for k in range(1, MAX_FILL_GAP_H + 1):
+        v = _slot(weather, t + timedelta(hours=step * k))
+        if v is not None and v.get("temp") is not None:
+            return k, v
+    return None
+
+
+def _interpolate(weather, t):
+    """앞뒤 값이 둘 다 있을 때만 temp·humidity·wind를 선형 보간. 못 채우면 None."""
+    before, after = _neighbor(weather, t, -1), _neighbor(weather, t, +1)
+    if before is None or after is None:
+        return None
+    (a, pv), (b, nv) = before, after
+    w = a / (a + b)
+    out = {}
+    for k in ("temp", "humidity", "wind"):
+        x, y = pv.get(k), nv.get(k)
+        out[k] = round(x + (y - x) * w, 1) if x is not None and y is not None else None
+    return out
 
 
 def _risk(hourly, season):
@@ -141,15 +242,19 @@ def build_show(detail, d, weather):
             "venue": venue, "date": d,
             "start_time": st, "day_type": dt_type, "foreign_audience": None,
             "wait_window": {"start": None, "end": None}, "season": season,
-            "forecast_available": False, "expected_audience": audience, "exposed_people": None,
+            "forecast_available": False, "data_status": "partial",
+            "expected_audience": audience, "scale": scale(audience),
+            "exposed_people": None,
             "risk": {"level": None, "peak_feel": None, "peak_time": None}, "hourly": [],
-            "parking_full_eta": None, "recommended_arrival": None, "facilities": []}
+            "parking_full_eta": parking_eta(venue, dt_type), "recommended_arrival": None,
+            "facilities": nearest_facilities(venue)}
     if st is None:
         return show
     start_dt = datetime.combine(_d(d), datetime.strptime(st, "%H:%M").time(), KST)
     wait_dt = start_dt - timedelta(hours=WAIT_HOURS[dt_type])
     show["wait_window"] = {"start": _hm(wait_dt), "end": st}
-    hourly = _hourly(start_dt, wait_dt, season, weather)
+    hourly, missing = _hourly(start_dt, wait_dt, season, weather)
+    show["data_status"] = "partial" if missing else "ok"
     if not any(h["feel"] is not None for h in hourly):
         return show
     risk = _risk(hourly, season)
@@ -180,7 +285,7 @@ def build(details, weather, now, weather_base):
              if not (parsable(det.get("time_guide")) and start_time(det.get("time_guide"), d) is None)]
     shows.sort(key=lambda s: (s["date"], s["start_time"] or "99:99", s["id"] or ""))
     return {"generated_at": now.replace(microsecond=0).isoformat(), "weather_base": weather_base,
-            "weather_source": WEATHER_SOURCE, "show_source": SHOW_SOURCE, "shows": shows}
+            "weather_source": WEATHER_SOURCE, "show_source": SHOW_SOURCE, "stale": False, "shows": shows}
 
 
 def _overlaps(s, today, last):
@@ -204,7 +309,32 @@ def _retry(fn, *args, tries=3, wait=1.0):
             time.sleep(wait * (i + 1))
 
 
+_last_kopis_call = [0.0]
+
+
+def _kopis_get(url, params, label, timeout=30):
+    """KOPIS 호출 사이를 KOPIS_GAP_S 이상 띄운다 (목록 페이지·상세·재시도 모두 이 함수를 지난다)."""
+    wait = _last_kopis_call[0] + KOPIS_GAP_S - time.monotonic()
+    if wait > 0:
+        time.sleep(wait)
+    try:
+        return get(url, params, label, timeout)
+    finally:
+        _last_kopis_call[0] = time.monotonic()
+
+
+def in_park(detail):
+    """상세 공연장명(fcltynm)에 '올림픽공원'이 있어야 남긴다."""
+    return PARK in (detail.get("facility") or "")
+
+
+def keep_venue(detail):
+    """올림픽공원 안이면서 4개 공연장 중 하나일 때만 남긴다 (뮤즈라이브 등 '기타'는 제외, 11/26 결정)."""
+    return in_park(detail) and detail.get("venue") in MAIN_VENUES
+
+
 def run():
+    kopis.get = _kopis_get          # kopis.py는 그대로 두고 호출 간격만 감싼다
     now = now_kst()
     today = now.date()
     last = today + timedelta(days=DAYS_AHEAD)
@@ -214,38 +344,69 @@ def run():
     details = []
     for s in shows:
         try:
-            details.append(_retry(kopis.fetch_detail, s["id"]))
+            det = _retry(kopis.fetch_detail, s["id"])
         except ApiError as e:
             _log(f"  상세 건너뜀 {s['id']}: {e}")
+            continue
         except Exception as e:          # 메시지에 URL이 섞일 수 있어 종류만 남긴다
             _log(f"  상세 건너뜀 {s['id']}: {type(e).__name__}")
-    try:
-        w = kma.fetch_hourly()
-        weather = w["hourly"]
-        b = w["base_date"] + w["base_time"]
-        weather_base = f"{b[:4]}-{b[4:6]}-{b[6:8]}T{b[8:10]}:{b[10:12]}:00+09:00"
-        _log(f"기상청 단기예보: 발표 {weather_base}")
-    except ApiError as e:
-        _log(f"기상청 단기예보 실패, 예보 없이 생성: {e}")
-        weather, weather_base = {}, None
+            continue
+        if not keep_venue(det):
+            _log(f"  공연장 제외 {s['id']}: {det.get('facility')}")
+            continue
+        details.append(det)
+    w = kma.fetch_hourly()          # 실패하면 main에서 직전 파일을 stale로 남긴다
+    weather = w["hourly"]
+    b = w["base_date"] + w["base_time"]
+    weather_base = f"{b[:4]}-{b[4:6]}-{b[6:8]}T{b[8:10]}:{b[10:12]}:00+09:00"
+    _log(f"기상청 단기예보: 발표 {weather_base}")
     return build(details, weather, now, weather_base)
 
 
-def main(argv):
+def write_json(path, data):
+    """임시 파일에 다 쓴 뒤 os.replace로 바꿔, 중간에 끊겨도 기존 파일이 깨지지 않게 한다."""
+    d = os.path.dirname(path)
+    os.makedirs(d, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=d, prefix=".forecast.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        raise
+
+
+def mark_stale(path):
+    """갱신 실패: 기존 파일의 stale만 true로 바꿔 저장. 기존 파일이 없거나 깨졌으면 아무것도 쓰지 않는다."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return False
+    data["stale"] = True
+    write_json(path, data)
+    return True
+
+
+def main(argv, out_path=None):
+    path = out_path or os.path.normpath(OUT_PATH)
     try:
         data = run()
-    except ApiError as e:
-        _log(f"실패: {e}")
+    except Exception as e:               # ApiError 메시지는 키·URL 없이 만든다. 그 밖의 예외는 종류만 남긴다
+        _log(f"실패: {e if isinstance(e, ApiError) else type(e).__name__}")
+        if "--stdout" not in argv:
+            if mark_stale(path):
+                _log("직전 forecast.json 유지, stale=true로 표시")
+            else:
+                _log("기존 forecast.json이 없어 아무것도 쓰지 않음")
         return 1
-    text = json.dumps(data, ensure_ascii=False, indent=2)
     if "--stdout" in argv:
         sys.stdout.reconfigure(errors="replace")
-        print(text)
+        print(json.dumps(data, ensure_ascii=False, indent=2))
     else:
-        path = os.path.normpath(OUT_PATH)
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(text + "\n")
+        write_json(path, data)
         _log(f"저장: web/public/data/forecast.json (공연 {len(data['shows'])}건)")
     return 0
 
