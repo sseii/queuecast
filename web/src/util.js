@@ -104,8 +104,15 @@ export function levelOf(show) {
   return show.forecast_available === false || !show.risk?.level ? "pending" : show.risk.level;
 }
 
+// 겨울인데 '안전'이어도 체감 5° 이하면 쌀쌀하다고 안내 (단계 기준은 그대로)
+export function isChilly(show, level = levelOf(show)) {
+  const f = show.risk?.peak_feel;
+  return show.season !== "summer" && level === "safe" && f != null && f <= 5;
+}
+
 export function mood(show, level = levelOf(show)) {
   if (level === "pending") return t("mood.pending");
+  if (isChilly(show, level)) return t("mood.winter.chilly");
   const season = show.season === "summer" ? "summer" : "winter";
   const lv = season === "winter" && level === "danger" ? "warning" : level;
   return t(`mood.${season}.${lv}`);
