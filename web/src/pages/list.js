@@ -3,13 +3,13 @@
 //  티켓을 누르면 그 공연 화면이 펼쳐진다
 import { loadShows } from "../data.js";
 import { groupShows, groupCard, bindGroupCards } from "../components/showCard.js";
-import { LEVELS, fmtGenerated, fmtBase, levelName, levelOf } from "../util.js";
+import { LEVELS, fmtGenerated, fmtBase, levelName, levelOf, scaleOf } from "../util.js";
 import { t } from "../i18n.js";
 import { icon } from "../components/icons.js";
 import { stopCountdown } from "../components/dayPlan.js";
 import { HERO_PHOTO, photoImg } from "../photos.js";
 
-export async function renderList(app, mode) {
+export async function renderList(app, mode, listView = "fan") {
   document.body.dataset.theme = "";
   stopCountdown();
   const data = await loadShows(mode);
@@ -42,7 +42,7 @@ export async function renderList(app, mode) {
     <nav class="quick" aria-label="${t("quick.label")}">
       ${quick("ticket", t("quick.shows"), t("quick.shows.sub", { n: groups.length }), mode === "replay" ? "#/replay" : "#/", "tickets")}
       ${quick("thermo", t("quick.levels"), t("quick.levels.sub"), "#/about/levels")}
-      ${quick("medical", t("quick.guide"), t("quick.guide.sub"), "#/about/guide")}
+      ${quick("medical", t("quick.guide"), t("quick.guide.sub"), mode === "replay" ? "#/replay/ops" : "#/ops")}
       ${
         mode === "replay"
           ? quick("spark", t("quick.forecast"), t("quick.forecast.sub"), "#/")
@@ -53,14 +53,18 @@ export async function renderList(app, mode) {
     <section class="list-section" id="sec-tickets">
       <div class="section-head">
         <h2>${t(`list.head.${mode}`)}</h2>
-        <p>${t(`list.lead.${mode}`)}</p>
+        <nav class="view-switch list-switch" aria-label="${t("quick.label")}">
+          <a href="${mode === "replay" ? "#/replay" : "#/"}" class="${listView === "fan" ? "active" : ""}">${icon.queue(18)}${t("view.list.fan")}</a>
+          <a href="${mode === "replay" ? "#/replay/ops" : "#/ops"}" class="${listView === "org" ? "active" : ""}">${icon.medical(18)}${t("view.list.org")}</a>
+        </nav>
       </div>
+      ${listView === "org" && data ? briefing(shows) : `<p class="section-lead">${t(`list.lead.${mode}`)}</p>`}
       ${
         !data
           ? `<div class="empty"><p><b>${t(`list.loading.${mode}`)}</b></p>
               <p class="fine">${t("list.loading.sub", { f: mode === "replay" ? "replay_2025.json" : "forecast.json" })}</p></div>`
           : shows.length
-            ? `<div class="ticket-grid">${groups.map((g) => groupCard(g, mode)).join("")}</div>`
+            ? `<div class="ticket-grid">${groups.map((g) => groupCard(g, mode, listView)).join("")}</div>`
             : `<div class="empty"><p>${t("list.none")}</p></div>`
       }
     </section>
@@ -73,6 +77,33 @@ export async function renderList(app, mode) {
     e.preventDefault();
     document.getElementById("sec-tickets").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+// 운영 브리핑: 예보 기간 안 회차 기준으로 주의 이상·대규모·만차 예상을 한 줄로
+function briefing(shows) {
+  const rated = shows.filter((s) => levelOf(s) !== "pending");
+  const risk = rated.filter((s) => LEVELS[levelOf(s)].rank >= 1).length;
+  const large = shows.filter((s) => scaleOf(s) === "large").length;
+  const pending = shows.length - rated.length;
+  const earliest = (list) => list.map((s) => s.parking_full_eta).filter(Boolean).sort()[0];
+  const wk = earliest(shows.filter((s) => s.day_type === "weekend"));
+  const wd = earliest(shows.filter((s) => s.day_type !== "weekend"));
+  const park = wk ? t("brief.park.wkend", { t: wk }) : wd ? t("brief.park.wkday", { t: wd }) : null;
+  const tile = (label, value, hot) => `<div class="brief-tile ${hot ? "is-hot" : ""}"><span>${label}</span><b>${value}</b></div>`;
+  return `
+    <section class="briefing" aria-label="${t("brief.title")}">
+      <div class="brief-head">
+        <h3>${t("brief.title")}</h3>
+        <p>${t("brief.line", { r: risk, l: large, p: park ? t("brief.park.line", { d: park }) : t("brief.park.none") })}</p>
+      </div>
+      <div class="brief-grid">
+        ${tile(t("brief.shows"), t("brief.n", { n: shows.length }))}
+        ${tile(t("brief.risk"), t("brief.n", { n: risk }), risk > 0)}
+        ${tile(t("brief.large"), t("brief.n", { n: large }))}
+        ${tile(t("brief.parking"), park ?? "—")}
+      </div>
+      <p class="fine">${pending ? `${t("brief.pending", { n: pending })} ` : ""}${t("brief.go")}</p>
+    </section>`;
 }
 
 function quick(ic, title, sub, href, scroll) {

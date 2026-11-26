@@ -4,6 +4,7 @@
 //   #/replay        2025 사례 목록 (replay_2025.json)
 //   #/replay/<id>   2025 사례 공연 화면
 //   …/<id>/org      같은 공연의 공단·주최사용 화면 (단계별 대응 가이드)
+//   #/ops, #/replay/ops  목록의 공단·주최사용 보기 (운영 브리핑 + 카드가 대응 가이드로 연결)
 //   #/about[/섹션]  서비스 소개 (levels·guide·data 로 바로 이동)
 // 티켓을 누르면 View Transitions API 로 티켓이 공연 화면 맨 위 큰 티켓으로 커진다.
 // (지원하지 않는 브라우저는 그냥 화면만 바뀜)
@@ -20,6 +21,9 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 function parse() {
   const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
   const mode = parts[0] === "replay" ? "replay" : "forecast";
+  // 목록의 공단·주최사용 보기: #/ops, #/replay/ops
+  const ops = parts[0] === "ops" || (parts[0] === "replay" && parts[1] === "ops");
+  if (ops) return { page: "list", mode, listView: "org" };
   const id = parts[0] === "replay" || parts[0] === "show" ? parts[1] : null;
   const view = parts[2] === "org" ? "org" : "fan";
   if (parts[0] === "about") return { page: "about", mode: "forecast", section: parts[1] ?? null };
@@ -49,7 +53,7 @@ async function render() {
   renderChrome(r);
   if (r.page === "about") renderAbout(app, r.section);
   else if (r.page === "detail") await renderDetail(app, r.mode, r.id, r.view);
-  else await renderList(app, r.mode);
+  else await renderList(app, r.mode, r.listView ?? "fan");
 }
 
 async function route({ keepScroll = false } = {}) {

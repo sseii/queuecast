@@ -1,5 +1,5 @@
 // 공연 티켓 (#7). 왼쪽은 공연 분위기 사진, 오른쪽 절취선 뒤 스텁에 체감온도
-import { esc, dateParts, mood, round, levelName, venueName, themeOf, vtName, dday, levelOf, showKey } from "../util.js";
+import { esc, dateParts, mood, round, levelName, venueName, themeOf, vtName, dday, levelOf, showKey, isChilly } from "../util.js";
 import { themeChips } from "./chips.js";
 import { t } from "../i18n.js";
 import { art } from "./art.js";
@@ -11,7 +11,12 @@ export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
   const d = dateParts(show.date);
   const dd = mode === "replay" ? null : dday(show);
   const href = `#/${mode === "replay" ? "replay" : "show"}/${encodeURIComponent(showKey(show))}${view === "org" ? "/org" : ""}`;
-  const hint = level === "pending" ? t("ticket.hint.pending") : level === "safe" || !show.recommended_arrival ? t("ticket.hint.safe") : t("ticket.hint", { t: esc(show.recommended_arrival) });
+  const hint =
+    level === "pending" ? t("ticket.hint.pending")
+    : isChilly(show, level) ? t("ticket.hint.warm")
+    : level === "safe" || !show.recommended_arrival ? t("ticket.hint.safe")
+    : t("ticket.hint", { t: esc(show.recommended_arrival) });
+  const ww = show.wait_window?.start && show.wait_window?.end ? t("ticket.wait", { a: esc(show.wait_window.start), b: esc(show.wait_window.end) }) : "";
   const [photo] = photosFor(theme, show.id, 1);
 
   return `
@@ -28,6 +33,7 @@ export function showCard(show, mode, { mini = false, view = "fan" } = {}) {
         <h3>${esc(show.title)}</h3>
         <p class="ticket-when"><b>${d.md}</b> ${d.wd} ${esc(show.start_time)}<span class="sep"></span>${esc(venueName(show.venue))}
           ${show.foreign_audience ? `<span class="en-tag" title="${t("ticket.en")}">EN</span>` : ""}</p>
+        ${ww && !mini ? `<p class="ticket-wait">${ww}</p>` : ""}
         ${
           mini
             ? ""
@@ -55,24 +61,25 @@ export function groupShows(shows) {
   return [...groups.values()]; // shows 가 날짜순이면 묶음도 첫 날짜순
 }
 
-export function groupCard(dates, mode) {
+export function groupCard(dates, mode, view = "fan") {
   const first = dates[0];
-  if (dates.length === 1) return showCard(first, mode);
+  if (dates.length === 1) return showCard(first, mode, { view });
   const base = `#/${mode === "replay" ? "replay" : "show"}/`;
+  const tail = view === "org" ? "/org" : "";
   const chips = dates
     .map((s) => {
       const d = dateParts(s.date);
       const lv = levelOf(s);
-      return `<a class="date-chip" href="${base}${encodeURIComponent(showKey(s))}" data-vt="${vtName(showKey(s))}"
+      return `<a class="date-chip" href="${base}${encodeURIComponent(showKey(s))}${tail}" data-vt="${vtName(showKey(s))}"
         title="${esc(`${d.md} ${s.start_time ?? ""} · ${levelName(lv)}`)}"><i class="dot lv-dot-${esc(lv)}"></i>${d.md}<small>${d.wd}</small></a>`;
     })
     .join("");
   // showCard 의 <a> 를 <div> 로 바꾸고, 카드 전체를 덮는 링크 + 그 위의 날짜 칩
-  return showCard(first, mode)
+  return showCard(first, mode, { view })
     .replace(/^\s*<a class="ticket /, '<div class="ticket is-group ')
     .replace(/<\/a>\s*$/, "</div>")
     .replace(/ href="[^"]*" data-id=/, " data-id=")
-    .replace('<div class="ticket-body">', `<a class="ticket-link" href="${base}${encodeURIComponent(showKey(first))}" aria-label="${esc(first.title)}"></a>
+    .replace('<div class="ticket-body">', `<a class="ticket-link" href="${base}${encodeURIComponent(showKey(first))}${tail}" aria-label="${esc(first.title)}"></a>
     <div class="ticket-body">`)
     .replace(/<p class="ticket-hint">/, `<span class="date-chips" aria-label="${t("ticket.dates")}">${chips}</span><p class="ticket-hint">`);
 }
