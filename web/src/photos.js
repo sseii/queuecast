@@ -25,6 +25,10 @@ export const PHOTOS = {
   ],
 };
 
+// 첫 화면 배경 사진. KSPO DOME 공식 사진 등으로 바꾸려면 사용 허락(공공누리 등)을 확인한 뒤
+// 파일을 web/public/images/ 에 넣고 HERO_PHOTO 대신 그 경로를 쓰면 된다
+export const HERO_PHOTO = PHOTOS.concert[0];
+
 export function photoUrl(path, w = 800) {
   return `https://images.pexels.com/photos/${path}?auto=compress&cs=tinysrgb&w=${w}`;
 }
